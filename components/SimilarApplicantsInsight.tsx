@@ -168,6 +168,12 @@ export default function SimilarApplicantsInsight({ profile }: Props) {
 
   if (!insight) return null;
 
+  // Max count for scaling bars (use the highest count across both lists)
+  const maxCount = Math.max(
+    insight.topSchools[0]?.count ?? 0,
+    insight.topPrograms[0]?.count ?? 0,
+  );
+
   return (
     <div className="bg-white rounded-2xl shadow-md border border-gray-100 p-5">
       <h3 className="text-base font-bold text-gray-800 flex items-center gap-2 mb-1">
@@ -187,39 +193,61 @@ export default function SimilarApplicantsInsight({ profile }: Props) {
         {/* Top Schools */}
         <div className="bg-gray-50 rounded-xl p-4">
           <h4 className="text-sm font-semibold text-gray-700 mb-3">常见录取学校</h4>
-          <ol className="space-y-2">
-            {insight.topSchools.map((s, i) => (
-              <li key={s.name} className="flex items-center gap-2 text-sm">
-                <span className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold ${
-                  i === 0 ? "bg-yellow-400 text-white" :
-                  i === 1 ? "bg-gray-300 text-white" :
-                  i === 2 ? "bg-orange-300 text-white" :
-                  "bg-gray-100 text-gray-500"
-                }`}>{i + 1}</span>
-                <span className="text-gray-800 flex-1 truncate">{s.name}</span>
-                <span className="text-gray-400 text-xs">{s.count}例</span>
-              </li>
-            ))}
-          </ol>
+          <div className="space-y-3">
+            {insight.topSchools.map((s, i) => {
+              const pct = (s.count / insight.total * 100);
+              const barWidth = Math.max(4, (s.count / maxCount) * 100);
+              return (
+                <div key={s.name}>
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className="text-xs text-gray-400 w-4 text-right font-medium">{i + 1}</span>
+                    <span className="text-sm text-gray-800 truncate flex-1">{s.name}</span>
+                  </div>
+                  <div className="flex items-center gap-2 ml-6">
+                    <div className="flex-1 h-5 bg-blue-50 rounded overflow-hidden">
+                      <div
+                        className="h-full bg-gradient-to-r from-blue-500 to-blue-400 rounded transition-all"
+                        style={{ width: `${barWidth}%` }}
+                      />
+                    </div>
+                    <span className="text-xs text-gray-500 whitespace-nowrap w-20 text-right">
+                      {pct.toFixed(1)}% · {s.count.toLocaleString()} 人
+                    </span>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
         </div>
 
         {/* Top Programs */}
         <div className="bg-gray-50 rounded-xl p-4">
           <h4 className="text-sm font-semibold text-gray-700 mb-3">常见录取项目</h4>
-          <ol className="space-y-2">
-            {insight.topPrograms.map((p, i) => (
-              <li key={p.name} className="flex items-center gap-2 text-sm">
-                <span className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold ${
-                  i === 0 ? "bg-blue-500 text-white" :
-                  i === 1 ? "bg-blue-300 text-white" :
-                  i === 2 ? "bg-blue-200 text-blue-700" :
-                  "bg-gray-100 text-gray-500"
-                }`}>{i + 1}</span>
-                <span className="text-gray-800 flex-1 truncate">{p.name}</span>
-                <span className="text-gray-400 text-xs">{p.count}例</span>
-              </li>
-            ))}
-          </ol>
+          <div className="space-y-3">
+            {insight.topPrograms.map((p, i) => {
+              const pct = (p.count / insight.total * 100);
+              const barWidth = Math.max(4, (p.count / maxCount) * 100);
+              return (
+                <div key={p.name}>
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className="text-xs text-gray-400 w-4 text-right font-medium">{i + 1}</span>
+                    <span className="text-sm text-gray-800 truncate flex-1">{p.name}</span>
+                  </div>
+                  <div className="flex items-center gap-2 ml-6">
+                    <div className="flex-1 h-5 bg-indigo-50 rounded overflow-hidden">
+                      <div
+                        className="h-full bg-gradient-to-r from-indigo-500 to-indigo-400 rounded transition-all"
+                        style={{ width: `${barWidth}%` }}
+                      />
+                    </div>
+                    <span className="text-xs text-gray-500 whitespace-nowrap w-20 text-right">
+                      {pct.toFixed(1)}% · {p.count.toLocaleString()} 人
+                    </span>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
         </div>
       </div>
     </div>

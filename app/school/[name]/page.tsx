@@ -133,7 +133,7 @@ export default function SchoolPage() {
   const chineseCases = admittedCases.filter((c) => c.applicant_country === "China");
 
   const tierDist = countDistribution(
-    chineseCases.map((c) => (c as any).applicant_background_tier || "未知").filter((t: string) => t !== "未知" && t !== "硕士")
+    chineseCases.map((c) => (c as any).applicant_background_tier || "未知").filter((t: string) => t !== "未知")
   );
   const gpaDist = countDistribution(
     chineseCases.map((c) => parseGPARange(c.applicant_gpa || "")).filter((g) => g !== "未知")

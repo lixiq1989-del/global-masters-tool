@@ -3,6 +3,7 @@
 import { useState, useMemo, useEffect } from "react";
 import Link from "next/link";
 import NavBar from "@/components/NavBar";
+import { useAuthContext } from "@/components/AuthProvider";
 import programsData from "@/data/programs.json";
 import employmentData from "@/data/employment.json";
 import type { RawProgram, RawEmployment } from "@/lib/types";
@@ -24,6 +25,7 @@ for (const e of employment) empMap.set(e.program_key ?? `${e.school_name}__${e.p
 const KEY = "uk-masters-favorites";
 
 export default function FavoritesPage() {
+  const { authed, loaded: authLoaded, requireAuth } = useAuthContext();
   const [favIds, setFavIds] = useState<number[]>([]);
   const [loaded, setLoaded] = useState(false);
 
@@ -67,6 +69,18 @@ export default function FavoritesPage() {
       <NavBar />
 
       <main className="max-w-6xl mx-auto px-4 py-6 space-y-5">
+        {authLoaded && !authed ? (
+          <div className="bg-white rounded-2xl shadow-md border border-gray-100 p-5 text-center py-16">
+            <p className="text-lg text-gray-500 mb-2">收藏功能需要登录</p>
+            <p className="text-sm text-gray-400 mb-4">请输入邀请码解锁全部功能</p>
+            <button
+              onClick={() => requireAuth()}
+              className="px-6 py-2.5 bg-blue-600 text-white rounded-xl text-sm font-medium hover:bg-blue-700"
+            >
+              输入邀请码
+            </button>
+          </div>
+        ) : (
         <div className="bg-white rounded-2xl shadow-md border border-gray-100 p-5">
           <div className="flex items-center justify-between mb-4">
             <div>
@@ -189,6 +203,7 @@ export default function FavoritesPage() {
             </div>
           ))}
         </div>
+        )}
       </main>
 
       <footer className="text-center text-gray-400 text-xs py-8 mt-8 border-t">

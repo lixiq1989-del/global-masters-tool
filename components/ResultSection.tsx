@@ -2,6 +2,7 @@
 
 import { useState, useMemo, useEffect, useRef } from "react";
 import ProgramCard from "./ProgramCard";
+import { useAuthContext } from "./AuthProvider";
 import type { RecommendedProgram, UserProfile, ReachLevel, UserSubScores } from "@/lib/types";
 import { useFavorites } from "@/hooks/useFavorites";
 import { generateReportHTML } from "@/lib/generateReport";
@@ -47,6 +48,12 @@ export default function ResultSection({ results, strength, subScores, profile }:
   const [moreCount, setMoreCount] = useState(PAGE_SIZE);
 
   const { favorites, toggle: toggleFav, clear: clearFavs, loaded: favsLoaded } = useFavorites();
+  const { authed, requireAuth } = useAuthContext();
+
+  function guardedToggleFav(id: number) {
+    if (!requireAuth(() => toggleFav(id))) return;
+    toggleFav(id);
+  }
 
   // ── AI Analysis ───────────────────────────────────────────────
   const [aiStrategy, setAiStrategy] = useState<string>("");
@@ -230,6 +237,7 @@ export default function ResultSection({ results, strength, subScores, profile }:
 
   // ── Generate Report ────────────────────────────────────────────
   function handleGenerateReport() {
+    if (!requireAuth(() => handleGenerateReport())) return;
     const html = generateReportHTML(profile, results, strength, aiStrategy || strategyLines);
     const win = window.open("", "_blank");
     if (win) {
@@ -405,7 +413,7 @@ export default function ResultSection({ results, strength, subScores, profile }:
                   <ProgramCard
                     key={item.program.id} item={item} rank={i + 1}
                     isFavorited={favsLoaded && favorites.has(item.program.id)}
-                    onToggleFavorite={() => toggleFav(item.program.id)}
+                    onToggleFavorite={() => guardedToggleFav(item.program.id)}
                     careerGoalLabel={profile.career_goal}
                     locationLabel={locationLabel}
                   />
@@ -426,7 +434,7 @@ export default function ResultSection({ results, strength, subScores, profile }:
                           <ProgramCard
                             key={item.program.id} item={item} rank={primaryPicks.length + i + 1}
                             isFavorited={favsLoaded && favorites.has(item.program.id)}
-                            onToggleFavorite={() => toggleFav(item.program.id)}
+                            onToggleFavorite={() => guardedToggleFav(item.program.id)}
                             careerGoalLabel={profile.career_goal}
                             locationLabel={locationLabel}
                           />
@@ -454,7 +462,7 @@ export default function ResultSection({ results, strength, subScores, profile }:
                   <ProgramCard
                     key={item.program.id} item={item} rank={i + 1}
                     isFavorited={favsLoaded && favorites.has(item.program.id)}
-                    onToggleFavorite={() => toggleFav(item.program.id)}
+                    onToggleFavorite={() => guardedToggleFav(item.program.id)}
                     careerGoalLabel={profile.career_goal}
                     locationLabel={locationLabel}
                   />

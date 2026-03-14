@@ -2,6 +2,7 @@
 
 import { useState, useMemo, useEffect } from "react";
 import NavBar from "@/components/NavBar";
+import { useAuthContext } from "@/components/AuthProvider";
 import InputForm from "@/components/InputForm";
 import { recommend, calcUserStrength, calcSubScores } from "@/lib/recommend";
 import { generateReportHTML } from "@/lib/generateReport";
@@ -40,6 +41,7 @@ const DEFAULT_PROFILE: UserProfile = {
 };
 
 export default function ReportPage() {
+  const { authed, loaded: authLoaded, requireAuth } = useAuthContext();
   const [profile, setProfile] = useState<UserProfile>(DEFAULT_PROFILE);
   const [results, setResults] = useState<RecommendedProgram[] | null>(null);
   const [strength, setStrength] = useState<number>(0);
@@ -129,8 +131,22 @@ export default function ReportPage() {
       <NavBar />
 
       <main className="max-w-5xl mx-auto px-4 py-6 space-y-6">
+        {/* Auth gate */}
+        {authLoaded && !authed ? (
+          <div className="bg-white rounded-2xl shadow-md border border-gray-100 p-5 text-center py-16">
+            <p className="text-lg text-gray-500 mb-2">申请规划报告需要登录</p>
+            <p className="text-sm text-gray-400 mb-4">请输入邀请码解锁全部功能</p>
+            <button
+              onClick={() => requireAuth()}
+              className="px-6 py-2.5 bg-blue-600 text-white rounded-xl text-sm font-medium hover:bg-blue-700"
+            >
+              输入邀请码
+            </button>
+          </div>
+        ) : null}
+
         {/* Input section */}
-        {!generated && (
+        {(!authLoaded || authed) && !generated && (
           <div className="bg-white rounded-2xl shadow-md border border-gray-100 p-6">
             <h2 className="text-lg font-bold text-gray-800 mb-1">申请规划报告</h2>
             <p className="text-xs text-gray-500 mb-5">填写背景信息，生成个性化申请规划</p>

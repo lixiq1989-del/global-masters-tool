@@ -1,4 +1,3 @@
-import Anthropic from "@anthropic-ai/sdk";
 import type { RecommendedProgram, UserProfile } from "@/lib/types";
 
 interface AnalyzeRequest {
@@ -64,8 +63,9 @@ ${background}
 }
 
 export async function POST(req: Request) {
-  if (!process.env.ANTHROPIC_API_KEY) {
-    return new Response("ANTHROPIC_API_KEY not configured", { status: 500 });
+  const apiKey = process.env.DEEPSEEK_API_KEY;
+  if (!apiKey) {
+    return new Response("DEEPSEEK_API_KEY not configured", { status: 500 });
   }
 
   let body: AnalyzeRequest;
@@ -76,25 +76,49 @@ export async function POST(req: Request) {
   }
 
   const { profile, primaryPicks, strength } = body;
-  const client = new Anthropic();
 
-  const stream = client.messages.stream({
-    model: "claude-opus-4-6",
-    max_tokens: 1024,
-    thinking: { type: "adaptive" },
-    messages: [{ role: "user", content: buildPrompt(profile, primaryPicks, strength) }],
+  const resp = await fetch("https://api.deepseek.com/chat/completions", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${apiKey}`,
+    },
+    body: JSON.stringify({
+      model: "deepseek-chat",
+      messages: [{ role: "user", content: buildPrompt(profile, primaryPicks, strength) }],
+      stream: true,
+      max_tokens: 1024,
+    }),
   });
 
+  if (!resp.ok) {
+    return new Response(`DeepSeek API error: ${resp.status}`, { status: 502 });
+  }
+
   const encoder = new TextEncoder();
+  const decoder = new TextDecoder();
+  const reader = resp.body!.getReader();
+
   const readable = new ReadableStream({
     async start(controller) {
+      let buffer = "";
       try {
-        for await (const event of stream) {
-          if (
-            event.type === "content_block_delta" &&
-            event.delta.type === "text_delta"
-          ) {
-            controller.enqueue(encoder.encode(event.delta.text));
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          buffer += decoder.decode(value, { stream: true });
+          const lines = buffer.split("\n");
+          buffer = lines.pop() || "";
+          for (const line of lines) {
+            const trimmed = line.trim();
+            if (!trimmed.startsWith("data: ")) continue;
+            const data = trimmed.slice(6);
+            if (data === "[DONE]") break;
+            try {
+              const parsed = JSON.parse(data);
+              const text = parsed.choices?.[0]?.delta?.content;
+              if (text) controller.enqueue(encoder.encode(text));
+            } catch { /* skip malformed chunks */ }
           }
         }
         controller.close();

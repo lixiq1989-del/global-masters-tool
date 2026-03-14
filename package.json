@@ -8,7 +8,6 @@
     "start": "next start -p 3200"
   },
   "dependencies": {
-    "@anthropic-ai/sdk": "^0.78.0",
     "@larksuiteoapi/node-sdk": "^1.59.0",
     "next": "^16.1.6",
     "react": "^19.0.0",

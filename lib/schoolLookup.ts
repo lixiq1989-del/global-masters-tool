@@ -34,10 +34,6 @@ function normalize(s: string): string {
     .trim();
 }
 
-function includes(haystack: string, needle: string): boolean {
-  return haystack.includes(needle) && needle.length >= 2;
-}
-
 // ── China lookup ──────────────────────────────────────────────────
 
 interface ChinaEntry {
@@ -52,16 +48,14 @@ interface ChinaEntry {
 export function lookupChina(schoolName: string): LookupResult | null {
   if (!schoolName.trim()) return null;
   const needle = normalize(schoolName);
+  if (needle.length < 2) return null;
 
-  for (const entry of chinaDb as ChinaEntry[]) {
-    const candidates = [
-      entry.school_name_cn,
-      entry.school_name_en,
-      ...entry.aliases,
-    ];
-    for (const c of candidates) {
-      const hay = normalize(c);
-      if (hay === needle || includes(hay, needle) || includes(needle, hay)) {
+  const entries = chinaDb as ChinaEntry[];
+
+  // Phase 1: exact match
+  for (const entry of entries) {
+    for (const c of [entry.school_name_cn, entry.school_name_en, ...entry.aliases]) {
+      if (normalize(c) === needle) {
         return {
           prestige_score: entry.prestige_score,
           detected_tier: entry.tier,
@@ -71,6 +65,30 @@ export function lookupChina(schoolName: string): LookupResult | null {
       }
     }
   }
+
+  // Phase 2: prefix match only (one must START WITH the other)
+  // Prevents "暨南大学" matching "南京大学" via middle substring "南大学"
+  let best: { entry: ChinaEntry; score: number } | null = null;
+  for (const entry of entries) {
+    for (const c of [entry.school_name_cn, entry.school_name_en, ...entry.aliases]) {
+      const hay = normalize(c);
+      if (hay.length < 2) continue;
+      let score = 0;
+      if (hay.startsWith(needle)) score = needle.length / hay.length;
+      else if (needle.startsWith(hay)) score = hay.length / needle.length;
+      if (score > 0 && (!best || score > best.score)) best = { entry, score };
+    }
+  }
+
+  if (best) {
+    return {
+      prestige_score: best.entry.prestige_score,
+      detected_tier: best.entry.tier,
+      confidence: best.entry.confidence as LookupResult["confidence"],
+      matched_name: best.entry.school_name_cn,
+    };
+  }
+
   return null;
 }
 
@@ -98,16 +116,20 @@ export function lookupGlobal(
 
   const needle = normalize(schoolName);
 
+  // Phase 1: exact match
+  for (const band of regionData.bands) {
+    for (const s of band.schools) {
+      if (normalize(s) === needle) {
+        return { prestige_score: band.prestige_score, detected_tier: band.tier, confidence: "high", matched_name: s };
+      }
+    }
+  }
+  // Phase 2: prefix match
   for (const band of regionData.bands) {
     for (const s of band.schools) {
       const hay = normalize(s);
-      if (hay === needle || includes(hay, needle) || includes(needle, hay)) {
-        return {
-          prestige_score: band.prestige_score,
-          detected_tier: band.tier,
-          confidence: "high",
-          matched_name: s,
-        };
+      if ((hay.startsWith(needle) || needle.startsWith(hay)) && needle.length >= 2 && hay.length >= 2) {
+        return { prestige_score: band.prestige_score, detected_tier: band.tier, confidence: "high", matched_name: s };
       }
     }
   }

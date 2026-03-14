@@ -76,8 +76,12 @@ const TARGET_COUNTRIES: { value: ProgramCountry; label: string }[] = [
 ];
 
 const CATEGORIES = [
-  "Finance", "Management", "Marketing", "Business Analytics",
-  "Accounting", "MBA", "Economics", "Supply Chain",
+  "Finance", "Accounting", "Finance & Accounting",
+  "Management", "Marketing", "Business Analytics",
+  "Economics", "MBA", "Supply Chain", "Supply Chain & Operations",
+  "FinTech", "Digital Business", "International Business",
+  "Entrepreneurship", "HR Management", "Strategy",
+  "Real Estate", "Public Policy", "Business",
 ];
 
 interface Props {

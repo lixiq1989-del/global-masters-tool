@@ -433,9 +433,38 @@ export function recommend(
   }
 
   if (profile.preferred_categories.length > 0) {
-    filtered = filtered.filter((p) =>
-      profile.preferred_categories.includes(p.program_category)
-    );
+    // Match by category OR by keywords in program name
+    // e.g. selecting "Business Analytics" also matches "Data Science", "Data Analytics" in program names
+    const CATEGORY_KEYWORDS: Record<string, string[]> = {
+      "Business Analytics": ["analytics", "data science", "data analysis", "big data", "quantitative"],
+      "Finance": ["finance", "financial", "banking", "investment"],
+      "FinTech": ["fintech", "financial technology"],
+      "Marketing": ["marketing", "digital marketing", "brand"],
+      "Management": ["management", "leadership", "organisational"],
+      "Accounting": ["accounting", "audit"],
+      "Finance & Accounting": ["finance", "accounting"],
+      "Economics": ["economics", "economic"],
+      "Supply Chain": ["supply chain", "logistics", "operations"],
+      "Supply Chain & Operations": ["supply chain", "operations", "logistics"],
+      "Digital Business": ["digital", "e-commerce", "innovation"],
+      "International Business": ["international business", "global business"],
+      "Entrepreneurship": ["entrepreneur", "venture", "innovation"],
+      "HR Management": ["human resource", "hr ", "people", "organisational behaviour"],
+      "Strategy": ["strategy", "strategic"],
+      "Real Estate": ["real estate", "property"],
+      "Public Policy": ["public policy", "public administration"],
+    };
+
+    filtered = filtered.filter((p) => {
+      // Direct category match
+      if (profile.preferred_categories.includes(p.program_category)) return true;
+      // Keyword match in program name
+      const pName = p.program_name.toLowerCase();
+      return profile.preferred_categories.some((cat) => {
+        const keywords = CATEGORY_KEYWORDS[cat] || [];
+        return keywords.some((kw) => pName.includes(kw));
+      });
+    });
   }
 
   if (profile.budget_gbp && profile.budget_gbp > 0) {

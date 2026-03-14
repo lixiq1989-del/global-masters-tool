@@ -1,0 +1,336 @@
+{
+  "_note": "Global university band lookup. Used when undergraduate_region != China. Prestige score 1-10.",
+  "UK": {
+    "_description": "UK universities by tier",
+    "bands": [
+      {
+        "tier": "G5",
+        "prestige_score": 10,
+        "schools": [
+          "University of Oxford", "Oxford",
+          "University of Cambridge", "Cambridge",
+          "Imperial College London", "Imperial College", "ICL",
+          "London School of Economics", "LSE",
+          "University College London", "UCL"
+        ],
+        "rationale": "G5 顶级院校，全球顶级品牌，英国商学院极高认可度"
+      },
+      {
+        "tier": "UK Top Tier",
+        "prestige_score": 8.5,
+        "schools": [
+          "University of Edinburgh", "Edinburgh",
+          "University of Manchester", "Manchester",
+          "King's College London", "King's College", "KCL",
+          "University of Warwick", "Warwick",
+          "University of Bristol", "Bristol",
+          "University of Glasgow", "Glasgow",
+          "University of Leeds", "Leeds",
+          "University of Birmingham", "Birmingham",
+          "University of Sheffield", "Sheffield",
+          "University of Nottingham", "Nottingham",
+          "University of Southampton", "Southampton",
+          "Durham University", "Durham",
+          "Newcastle University", "Newcastle",
+          "Cardiff University", "Cardiff",
+          "Queen's University Belfast", "Queen's Belfast",
+          "Lancaster University", "Lancaster"
+        ],
+        "rationale": "罗素集团顶尖院校，英国主流 target school"
+      },
+      {
+        "tier": "UK Strong Target",
+        "prestige_score": 7,
+        "schools": [
+          "University of Bath", "Bath",
+          "University of York", "York",
+          "University of Exeter", "Exeter",
+          "University of St Andrews", "St Andrews",
+          "University of Surrey", "Surrey",
+          "University of Reading", "Reading",
+          "Loughborough University", "Loughborough",
+          "Queen Mary University of London", "QMUL", "Queen Mary",
+          "Bayes Business School", "City University London", "City, University of London",
+          "University of Sussex", "Sussex",
+          "University of East Anglia", "UEA",
+          "Heriot-Watt University", "Heriot-Watt",
+          "University of Dundee", "Dundee",
+          "University of Aberdeen", "Aberdeen",
+          "University of Leicester", "Leicester",
+          "Aston University", "Aston",
+          "University of Liverpool", "Liverpool"
+        ],
+        "rationale": "英国 strong target 院校，商科认可度较好"
+      },
+      {
+        "tier": "UK Target",
+        "prestige_score": 5.5,
+        "schools": [],
+        "rationale": "英国一般院校，其他未被识别的英国大学"
+      }
+    ]
+  },
+  "US": {
+    "_description": "US universities by tier",
+    "bands": [
+      {
+        "tier": "US Ivy+",
+        "prestige_score": 10,
+        "schools": [
+          "Harvard University", "Harvard",
+          "Yale University", "Yale",
+          "Princeton University", "Princeton",
+          "Columbia University", "Columbia",
+          "University of Pennsylvania", "UPenn", "Wharton",
+          "Cornell University", "Cornell",
+          "Dartmouth College", "Dartmouth",
+          "Brown University", "Brown",
+          "Massachusetts Institute of Technology", "MIT",
+          "Stanford University", "Stanford",
+          "University of Chicago", "UChicago",
+          "Duke University", "Duke",
+          "Northwestern University", "Northwestern",
+          "Johns Hopkins University", "Johns Hopkins",
+          "California Institute of Technology", "Caltech"
+        ],
+        "rationale": "常青藤及同级顶校，全球顶级品牌，英国院校极高认可度"
+      },
+      {
+        "tier": "US Top 30",
+        "prestige_score": 8.5,
+        "schools": [
+          "New York University", "NYU",
+          "Georgetown University", "Georgetown",
+          "University of Notre Dame", "Notre Dame",
+          "Emory University", "Emory",
+          "Vanderbilt University", "Vanderbilt",
+          "Rice University", "Rice",
+          "Washington University in St. Louis", "WashU",
+          "Tufts University", "Tufts",
+          "University of Southern California", "USC",
+          "University of California Los Angeles", "UCLA",
+          "University of Michigan", "Michigan",
+          "University of Virginia", "UVA",
+          "University of California Berkeley", "UC Berkeley", "Berkeley",
+          "Carnegie Mellon University", "CMU",
+          "University of California San Diego", "UCSD"
+        ],
+        "rationale": "美国 Top 30 高校，英国认可度高"
+      },
+      {
+        "tier": "US Top 50",
+        "prestige_score": 7.5,
+        "schools": [],
+        "rationale": "美国 US News Top 50，英国有一定认可度"
+      },
+      {
+        "tier": "US Top 100",
+        "prestige_score": 6,
+        "schools": [],
+        "rationale": "美国 Top 100，需结合 GPA 和实习判断整体背景"
+      },
+      {
+        "tier": "US Other",
+        "prestige_score": 4,
+        "schools": [],
+        "rationale": "其他美国认证院校"
+      }
+    ]
+  },
+  "Hong Kong": {
+    "_description": "Hong Kong universities",
+    "bands": [
+      {
+        "tier": "HK Top",
+        "prestige_score": 9.5,
+        "schools": [
+          "University of Hong Kong", "HKU",
+          "Chinese University of Hong Kong", "CUHK",
+          "Hong Kong University of Science and Technology", "HKUST"
+        ],
+        "rationale": "港三校，QS 全球前 50-100，英国顶校认可度高"
+      },
+      {
+        "tier": "HK Strong",
+        "prestige_score": 7.5,
+        "schools": [
+          "City University of Hong Kong", "CityU HK",
+          "Hong Kong Polytechnic University", "PolyU",
+          "Hong Kong Baptist University", "HKBU",
+          "Lingnan University"
+        ],
+        "rationale": "港次一梯队院校，英国认可度中等偏上"
+      }
+    ]
+  },
+  "Singapore": {
+    "_description": "Singapore universities",
+    "bands": [
+      {
+        "tier": "SG Top",
+        "prestige_score": 9.5,
+        "schools": [
+          "National University of Singapore", "NUS",
+          "Nanyang Technological University", "NTU"
+        ],
+        "rationale": "新加坡顶校，QS 全球前 30，英国认可度极高"
+      },
+      {
+        "tier": "SG Strong",
+        "prestige_score": 7.5,
+        "schools": [
+          "Singapore Management University", "SMU"
+        ],
+        "rationale": "新加坡强校，商科尤佳"
+      },
+      {
+        "tier": "SG Other",
+        "prestige_score": 6,
+        "schools": [
+          "Singapore Institute of Technology", "SIT",
+          "Singapore University of Technology and Design", "SUTD",
+          "Singapore University of Social Sciences", "SUSS"
+        ],
+        "rationale": "新加坡其他院校"
+      }
+    ]
+  },
+  "Australia": {
+    "_description": "Australian universities",
+    "bands": [
+      {
+        "tier": "AU Go8",
+        "prestige_score": 8.5,
+        "schools": [
+          "University of Melbourne", "Melbourne",
+          "Australian National University", "ANU",
+          "University of Sydney", "Sydney",
+          "University of New South Wales", "UNSW",
+          "University of Queensland", "UQ",
+          "University of Adelaide", "Adelaide",
+          "Monash University", "Monash",
+          "University of Western Australia", "UWA"
+        ],
+        "rationale": "澳大利亚八校联盟，英国认可度良好"
+      },
+      {
+        "tier": "AU Strong",
+        "prestige_score": 6.5,
+        "schools": [
+          "University of Technology Sydney", "UTS",
+          "Macquarie University", "Macquarie",
+          "RMIT University", "RMIT",
+          "Deakin University", "Deakin",
+          "La Trobe University", "La Trobe",
+          "Curtin University", "Curtin",
+          "Griffith University", "Griffith"
+        ],
+        "rationale": "澳大利亚中等偏强院校"
+      },
+      {
+        "tier": "AU Other",
+        "prestige_score": 5,
+        "schools": [],
+        "rationale": "其他澳大利亚认证院校"
+      }
+    ]
+  },
+  "Canada": {
+    "_description": "Canadian universities",
+    "bands": [
+      {
+        "tier": "CA Top",
+        "prestige_score": 9,
+        "schools": [
+          "University of Toronto", "UofT", "U of T",
+          "University of British Columbia", "UBC",
+          "McGill University", "McGill"
+        ],
+        "rationale": "加拿大顶校，英国认可度高"
+      },
+      {
+        "tier": "CA Strong",
+        "prestige_score": 7,
+        "schools": [
+          "University of Waterloo", "Waterloo",
+          "Western University", "Western",
+          "Queen's University", "Queen's",
+          "University of Alberta", "Alberta",
+          "McMaster University", "McMaster",
+          "University of Calgary", "Calgary",
+          "Simon Fraser University", "SFU"
+        ],
+        "rationale": "加拿大强校，英国认可度中等偏上"
+      },
+      {
+        "tier": "CA Other",
+        "prestige_score": 5,
+        "schools": [],
+        "rationale": "其他加拿大认证院校"
+      }
+    ]
+  },
+  "Europe": {
+    "_description": "European universities (non-UK)",
+    "bands": [
+      {
+        "tier": "EU Top",
+        "prestige_score": 9,
+        "schools": [
+          "ETH Zurich", "ETH",
+          "Bocconi University", "Bocconi",
+          "HEC Paris", "HEC",
+          "INSEAD",
+          "Rotterdam School of Management", "RSM Erasmus",
+          "Copenhagen Business School", "CBS",
+          "IE Business School", "IE Madrid",
+          "ESADE Business School", "ESADE",
+          "Mannheim Business School", "Mannheim",
+          "WHU Otto Beisheim School of Management", "WHU",
+          "University of St. Gallen", "HSG",
+          "TU Munich", "Technical University of Munich",
+          "KU Leuven",
+          "Maastricht University", "Maastricht",
+          "Tilburg University", "Tilburg",
+          "University of Amsterdam", "UvA",
+          "Sciences Po", "Sciences Po Paris"
+        ],
+        "rationale": "欧洲顶尖商科/综合院校，QS 全球前 100，英国认可度高"
+      },
+      {
+        "tier": "EU Strong",
+        "prestige_score": 7,
+        "schools": [],
+        "rationale": "欧洲其他有一定知名度的院校（QS 100-300）"
+      },
+      {
+        "tier": "EU Other",
+        "prestige_score": 5,
+        "schools": [],
+        "rationale": "其他欧洲认证院校"
+      }
+    ]
+  },
+  "Other": {
+    "_description": "All other regions",
+    "bands": [
+      {
+        "tier": "Other Known",
+        "prestige_score": 6,
+        "schools": [],
+        "rationale": "其他地区有一定知名度的院校"
+      },
+      {
+        "tier": "Other",
+        "prestige_score": 4,
+        "schools": [],
+        "rationale": "其他地区未识别院校，保守估计"
+      }
+    ]
+  },
+  "_fallback": {
+    "prestige_score": 5,
+    "tier": "Unknown",
+    "rationale": "无法识别学校，使用保守默认分值，建议用户手动选择档次"
+  }
+}

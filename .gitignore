@@ -1,0 +1,12 @@
+node_modules/
+.next/
+.env
+.env.local
+.env*.local
+*.log
+.DS_Store
+out/
+# Large template files (already merged into cases.json)
+data/template_*
+data/*.csv
+scripts/

@@ -6,6 +6,8 @@ import { useAuthContext } from "./AuthProvider";
 import type { RecommendedProgram, UserProfile, ReachLevel, UserSubScores } from "@/lib/types";
 import { useFavorites } from "@/hooks/useFavorites";
 import { generateReportHTML } from "@/lib/generateReport";
+import { WechatGroupCTA } from "./WechatGroupModal";
+import SimilarApplicantsInsight from "./SimilarApplicantsInsight";
 
 const REACH_CAPS: Record<ReachLevel, number> = { reach: 5, match: 10, safety: 5 };
 
@@ -325,6 +327,9 @@ export default function ResultSection({ results, strength, subScores, profile }:
         </div>
       </div>
 
+      {/* ── Similar Applicants Insight ──────────────────────── */}
+      <SimilarApplicantsInsight profile={profile} />
+
       {/* ── Tabs + Filters ───────────────────────────────────── */}
       <div className="bg-white rounded-2xl shadow-md border border-gray-100 p-5">
         {/* Tabs */}
@@ -531,6 +536,18 @@ export default function ResultSection({ results, strength, subScores, profile }:
           </div>
         </div>
       )}
+
+      {/* WeChat Group CTA */}
+      <WechatGroupCTA
+        title="想获得更详细的选校建议？"
+        desc="加入 AI 留学选校交流群"
+        features={[
+          "真实录取案例分享",
+          "项目就业数据分析",
+          "留学申请经验交流",
+          "免费选校建议",
+        ]}
+      />
 
       {/* Disclaimer */}
       <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-4 text-xs text-yellow-800">

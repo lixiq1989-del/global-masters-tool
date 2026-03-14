@@ -10,3 +10,4 @@ out/
 data/template_*
 data/*.csv
 scripts/
+.vercel

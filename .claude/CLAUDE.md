@@ -11,15 +11,19 @@
 ## 数据
 - `data/programs.json` — 1540 个项目
 - `data/employment.json` — 1599 条就业数据
-- `data/cases.json` — 24293 条录取案例（含 template_matched_cases 合并）
-- `data/template_matched_cases.json` — 飞书来源的案例（已合并入 cases.json）
+- `data/cases.json` — 25345 条录取案例
 
 ## 页面路由
 - `/` — 智能推荐（InputForm → recommend() → ResultSection）
 - `/explore` — 项目探索（筛选浏览全部项目）
 - `/school/[name]` — 学校详情（项目列表 + 录取画像 + 就业统计）
-- `/compare` — 项目对比（待开发）
-- `/report` — 申请规划报告（待开发）
+- `/compare` — 项目对比
+- `/report` — 申请规划报告
+- `/favorites` — 收藏列表
+
+## 部署
+- Vercel: https://uk-masters-tool.vercel.app
+- GitHub: https://github.com/lixiq1989-del/global-masters-tool
 
 ## 核心算法 (`lib/recommend.ts`)
 - PATTERN_TABLE: tier×GPA → P25/P50/P75 品牌分布

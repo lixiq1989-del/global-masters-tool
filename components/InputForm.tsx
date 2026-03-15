@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import type { UserProfile, JobLocation, CareerGoal, UndergraduateRegion, ProgramCountry } from "@/lib/types";
 import { lookupPrestige } from "@/lib/schoolLookup";
 import type { LookupResult } from "@/lib/schoolLookup";
+import { useProfile } from "@/hooks/useProfile";
 
 const REGIONS: { value: UndergraduateRegion; label: string }[] = [
   { value: "China",       label: "🇨🇳 中国大陆" },
@@ -90,10 +91,21 @@ interface Props {
 }
 
 export default function InputForm({ defaultProfile, onGenerate }: Props) {
+  const { profile: savedProfile, loaded: profileLoaded, save: saveProfile } = useProfile();
   const [p, setP] = useState<UserProfile>(defaultProfile);
   const [lookup, setLookup] = useState<LookupResult | null>(null);
   const [lookupStatus, setLookupStatus] = useState<"idle" | "found" | "manual">("idle");
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [profileApplied, setProfileApplied] = useState(false);
+  const [savedToast, setSavedToast] = useState(false);
+
+  // Auto-fill from saved profile on first load
+  useEffect(() => {
+    if (profileLoaded && savedProfile && !profileApplied && !p.undergraduate_school) {
+      setP(savedProfile);
+      setProfileApplied(true);
+    }
+  }, [profileLoaded, savedProfile, profileApplied, p.undergraduate_school]);
 
   // Re-run lookup when school name or region changes
   useEffect(() => {
@@ -382,12 +394,34 @@ export default function InputForm({ defaultProfile, onGenerate }: Props) {
         />
       </Field>
 
-      <button
-        type="submit"
-        className="w-full md:w-auto px-10 py-3 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-semibold rounded-xl shadow-md transition-colors text-base"
-      >
-        🚀 生成推荐列表
-      </button>
+      <div className="flex items-center gap-3 flex-wrap">
+        <button
+          type="submit"
+          className="px-10 py-3 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-semibold rounded-xl shadow-md transition-colors text-base"
+        >
+          生成推荐列表
+        </button>
+        <button
+          type="button"
+          onClick={() => {
+            saveProfile(p);
+            setSavedToast(true);
+            setTimeout(() => setSavedToast(false), 2000);
+          }}
+          className="px-4 py-2.5 text-sm text-gray-600 border border-gray-300 rounded-xl hover:border-blue-400 hover:text-blue-600 transition-colors"
+        >
+          {savedToast ? "✓ 已保存" : "保存到档案"}
+        </button>
+        {profileLoaded && savedProfile && !profileApplied && p.undergraduate_school !== savedProfile.undergraduate_school && (
+          <button
+            type="button"
+            onClick={() => { setP(savedProfile); setProfileApplied(true); }}
+            className="text-xs text-blue-500 underline"
+          >
+            从档案加载
+          </button>
+        )}
+      </div>
     </form>
   );
 }

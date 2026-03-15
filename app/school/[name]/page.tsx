@@ -8,6 +8,7 @@ import programsData from "@/data/programs.json";
 import employmentData from "@/data/employment.json";
 import casesData from "@/data/cases.json";
 import type { RawProgram, RawEmployment, RawCase } from "@/lib/types";
+import { WechatGroupCTA } from "@/components/WechatGroupModal";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 const programs = programsData as any as RawProgram[];
@@ -333,6 +334,14 @@ export default function SchoolPage() {
           </div>
         </Section>
       </main>
+
+      {/* WeChat Group CTA */}
+      <div className="max-w-5xl mx-auto px-4 mt-8">
+        <WechatGroupCTA
+          title="想了解这个学校真实录取情况？"
+          desc="加入留学申请交流群，一起讨论申请策略"
+        />
+      </div>
 
       <footer className="text-center text-gray-400 text-xs py-8 mt-8 border-t">
         数据来源：各国大学官方网站、QS/FT 排名等公开数据 · 统计画像仅供参考

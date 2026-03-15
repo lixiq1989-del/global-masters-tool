@@ -8,6 +8,7 @@ import { useFavorites } from "@/hooks/useFavorites";
 import { generateReportHTML } from "@/lib/generateReport";
 import { WechatGroupCTA } from "./WechatGroupModal";
 import SimilarApplicantsInsight from "./SimilarApplicantsInsight";
+import RecommendedMajors from "./RecommendedMajors";
 
 const REACH_CAPS: Record<ReachLevel, number> = { reach: 5, match: 10, safety: 5 };
 
@@ -326,6 +327,9 @@ export default function ResultSection({ results, strength, subScores, profile }:
           {profile.budget_gbp && <span>💷 预算 £{profile.budget_gbp.toLocaleString()}</span>}
         </div>
       </div>
+
+      {/* ── Recommended Majors ────────────────────────────── */}
+      <RecommendedMajors profile={profile} />
 
       {/* ── Similar Applicants Insight ──────────────────────── */}
       <SimilarApplicantsInsight profile={profile} />

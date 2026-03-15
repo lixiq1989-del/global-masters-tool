@@ -6,6 +6,8 @@ import employmentData from "@/data/employment.json";
 import type { RawProgram, RawEmployment } from "@/lib/types";
 import Link from "next/link";
 import NavBar from "@/components/NavBar";
+import { useFavorites } from "@/hooks/useFavorites";
+import { useAuthContext } from "@/components/AuthProvider";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 const programs = programsData as any as RawProgram[];
@@ -153,6 +155,14 @@ function getCitiesByCountry(country: string): string[] {
 }
 
 export default function ExplorePage() {
+  const { favorites, toggle: toggleFav, loaded: favsLoaded } = useFavorites();
+  const { requireAuth } = useAuthContext();
+
+  function guardedToggleFav(id: number) {
+    if (!requireAuth(() => toggleFav(id))) return;
+    toggleFav(id);
+  }
+
   const [filterCountry, setFilterCountry] = useState("all");
   const [filterSchool, setFilterSchool] = useState("all");
   const [filterCategory, setFilterCategory] = useState("all");
@@ -345,7 +355,10 @@ export default function ExplorePage() {
           {display.map((p) => {
             const emp = empMap.get(p.program_key) ?? null;
             return (
-              <ExploreCard key={p.id} program={p} employment={emp} onViewSchool={(school) => {
+              <ExploreCard key={p.id} program={p} employment={emp}
+                isFavorited={favsLoaded && favorites.has(p.id)}
+                onToggleFavorite={() => guardedToggleFav(p.id)}
+                onViewSchool={(school) => {
                 setFilterSchool(school);
                 setShowCount(PAGE_SIZE);
                 window.scrollTo({ top: 0, behavior: "smooth" });
@@ -386,10 +399,14 @@ export default function ExplorePage() {
 function ExploreCard({
   program: p,
   employment: e,
+  isFavorited = false,
+  onToggleFavorite,
   onViewSchool,
 }: {
   program: RawProgram;
   employment: RawEmployment | null;
+  isFavorited?: boolean;
+  onToggleFavorite?: () => void;
   onViewSchool: (school: string) => void;
 }) {
   const country = (p as any).country as string;
@@ -457,8 +474,17 @@ function ExploreCard({
           </div>
         </div>
 
-        {/* Right: scores + cost */}
+        {/* Right: scores + cost + fav */}
         <div className="mt-3 sm:mt-0 sm:w-48 flex sm:flex-col gap-3 sm:gap-2 sm:items-end shrink-0">
+          {onToggleFavorite && (
+            <button
+              onClick={onToggleFavorite}
+              title={isFavorited ? "取消收藏" : "收藏此项目"}
+              className={`text-lg transition-transform hover:scale-110 self-end ${isFavorited ? "text-yellow-400" : "text-gray-300 hover:text-yellow-300"}`}
+            >
+              {isFavorited ? "★" : "☆"}
+            </button>
+          )}
           <div className="flex gap-2">
             <ScorePill label="品牌" value={p.brand_score} />
             <ScorePill label="难度" value={p.admission_difficulty_score} />

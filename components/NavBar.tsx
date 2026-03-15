@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useAuthContext } from "./AuthProvider";
@@ -12,9 +13,25 @@ const TABS = [
   { href: "/favorites", label: "收藏", icon: "★", desc: "" },
 ];
 
+const USER_MENU = [
+  { href: "/profile", label: "我的档案", icon: "👤" },
+  { href: "/tracker", label: "申请进度", icon: "📊" },
+];
+
 export default function NavBar() {
   const pathname = usePathname();
   const { authed, loaded, logout, requireAuth } = useAuthContext();
+  const [menuOpen, setMenuOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  // Close menu on outside click
+  useEffect(() => {
+    function handleClick(e: MouseEvent) {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) setMenuOpen(false);
+    }
+    if (menuOpen) document.addEventListener("mousedown", handleClick);
+    return () => document.removeEventListener("mousedown", handleClick);
+  }, [menuOpen]);
 
   return (
     <header className="bg-[#1e3a5f] text-white shadow-lg">
@@ -27,22 +44,50 @@ export default function NavBar() {
           </p>
         </div>
         {loaded && (
-          <div className="shrink-0 ml-4 mt-1">
-            {authed ? (
+          <div className="shrink-0 ml-4 mt-1 flex items-center gap-2">
+            {/* User menu dropdown */}
+            <div className="relative" ref={menuRef}>
               <button
-                onClick={logout}
-                className="text-xs text-blue-200 hover:text-white border border-blue-300/30 rounded-lg px-3 py-1.5 hover:bg-white/10 transition-colors"
+                onClick={() => setMenuOpen((v) => !v)}
+                className="w-8 h-8 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center text-sm transition-colors"
+                title="我的"
               >
-                已登录 · 退出
+                👤
               </button>
-            ) : (
-              <button
-                onClick={() => requireAuth()}
-                className="text-xs text-white bg-white/15 hover:bg-white/25 border border-white/30 rounded-lg px-3 py-1.5 transition-colors"
-              >
-                输入邀请码
-              </button>
-            )}
+              {menuOpen && (
+                <div className="absolute right-0 top-10 bg-white rounded-xl shadow-lg border border-gray-200 py-1 w-36 z-50">
+                  {USER_MENU.map((item) => (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      onClick={() => setMenuOpen(false)}
+                      className={`flex items-center gap-2 px-3 py-2 text-sm hover:bg-gray-50 ${
+                        pathname === item.href ? "text-blue-600 font-medium" : "text-gray-700"
+                      }`}
+                    >
+                      <span>{item.icon}</span>
+                      {item.label}
+                    </Link>
+                  ))}
+                  <div className="border-t border-gray-100 my-1" />
+                  {authed ? (
+                    <button
+                      onClick={() => { logout(); setMenuOpen(false); }}
+                      className="w-full text-left flex items-center gap-2 px-3 py-2 text-sm text-gray-500 hover:bg-gray-50"
+                    >
+                      🚪 退出登录
+                    </button>
+                  ) : (
+                    <button
+                      onClick={() => { requireAuth(); setMenuOpen(false); }}
+                      className="w-full text-left flex items-center gap-2 px-3 py-2 text-sm text-blue-600 hover:bg-gray-50"
+                    >
+                      🔑 输入邀请码
+                    </button>
+                  )}
+                </div>
+              )}
+            </div>
           </div>
         )}
       </div>

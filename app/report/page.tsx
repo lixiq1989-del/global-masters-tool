@@ -7,6 +7,8 @@ import InputForm from "@/components/InputForm";
 import { recommend, calcUserStrength, calcSubScores } from "@/lib/recommend";
 import { generateReportHTML } from "@/lib/generateReport";
 import type { UserProfile, RecommendedProgram, ReachLevel } from "@/lib/types";
+import RecommendedMajors from "@/components/RecommendedMajors";
+import ProfileImprovements from "@/components/ProfileImprovements";
 import programsData from "@/data/programs.json";
 import employmentData from "@/data/employment.json";
 import casesData from "@/data/cases.json";
@@ -282,6 +284,12 @@ export default function ReportPage() {
                 );
               })}
             </Section>
+
+            {/* Recommended Majors */}
+            <RecommendedMajors profile={profile} />
+
+            {/* Profile Improvements */}
+            <ProfileImprovements profile={profile} strength={strength} />
 
             {/* Timeline */}
             <Section title="申请时间线">

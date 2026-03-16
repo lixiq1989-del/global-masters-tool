@@ -213,6 +213,11 @@ export default function ExplorePage() {
         case "difficulty": return b.admission_difficulty_score - a.admission_difficulty_score;
         case "cost_asc": return (a.tuition_fee ?? 99999) - (b.tuition_fee ?? 99999);
         case "cost_desc": return (b.tuition_fee ?? 0) - (a.tuition_fee ?? 0);
+        case "salary": {
+          const sa = empMap.get(a.program_key)?.average_salary ?? 0;
+          const sb = empMap.get(b.program_key)?.average_salary ?? 0;
+          return sb - sa;
+        }
         case "school": return a.school_name.localeCompare(b.school_name);
         default: return b.brand_score - a.brand_score;
       }
@@ -327,6 +332,7 @@ export default function ExplorePage() {
               <option value="difficulty">难度↓</option>
               <option value="cost_asc">学费↑</option>
               <option value="cost_desc">学费↓</option>
+              <option value="salary">薪资↓</option>
               <option value="school">学校名A-Z</option>
             </select>
 
@@ -435,14 +441,12 @@ function ExploreCard({
             </button>
           </div>
 
-          <a
-            href={p.program_url}
-            target="_blank"
-            rel="noopener noreferrer"
+          <Link
+            href={`/program/${p.id}`}
             className="text-[15px] font-semibold text-blue-700 hover:underline leading-tight block mb-2"
           >
             {p.program_name}
-          </a>
+          </Link>
 
           <div className="flex flex-wrap gap-1.5 mb-2">
             <span className="bg-blue-50 text-blue-700 text-[10px] px-2 py-0.5 rounded-full font-medium">{p.program_category}</span>

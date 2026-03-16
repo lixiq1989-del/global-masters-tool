@@ -40,7 +40,7 @@ export default function NavBar() {
         <div>
           <h1 className="text-xl font-bold tracking-tight">AI 全球商科硕士选校工具</h1>
           <p className="text-blue-200 text-xs mt-1">
-            覆盖 6 国 117 所院校 · 1540 个商科硕士项目 · 25345 条录取案例 · 1599 条就业数据
+            覆盖 6 国 117 所院校 · 1540 个商科硕士项目 · 79956 条录取案例 · 1599 条就业数据
           </p>
         </div>
         {loaded && (

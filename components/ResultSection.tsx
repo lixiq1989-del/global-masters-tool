@@ -525,6 +525,12 @@ export default function ResultSection({ results, strength, subScores, profile }:
             )}
           </div>
           <div className="flex gap-3 mt-3">
+            <a
+              href="/tracker"
+              className="text-xs text-green-600 underline hover:text-green-800"
+            >
+              📊 管理申请进度
+            </a>
             <button
               onClick={handleGenerateReport}
               className="text-xs text-blue-600 underline hover:text-blue-800"

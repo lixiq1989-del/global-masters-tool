@@ -12,11 +12,12 @@ import ProfileImprovements from "@/components/ProfileImprovements";
 import programsData from "@/data/programs.json";
 import employmentData from "@/data/employment.json";
 import casesData from "@/data/cases.json";
+import { compassCases } from "@/lib/compassCases";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 const programs = programsData as any as Parameters<typeof recommend>[1];
 const employment = employmentData as any as Parameters<typeof recommend>[2];
-const cases = casesData as any as Parameters<typeof recommend>[3];
+const cases = [...(casesData as any as Parameters<typeof recommend>[3]), ...compassCases] as Parameters<typeof recommend>[3];
 
 const REACH_LABELS: Record<ReachLevel, { label: string; color: string; dot: string }> = {
   reach: { label: "冲刺", color: "text-red-700", dot: "bg-red-500" },

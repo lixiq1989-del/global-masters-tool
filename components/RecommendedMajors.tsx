@@ -3,10 +3,11 @@
 import { useMemo } from "react";
 import type { UserProfile } from "@/lib/types";
 import casesData from "@/data/cases.json";
+import { compassCases } from "@/lib/compassCases";
 import type { RawCase } from "@/lib/types";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
-const allCases = casesData as any as RawCase[];
+const allCases = [...(casesData as any as RawCase[]), ...compassCases];
 
 interface MajorScore {
   key: string;

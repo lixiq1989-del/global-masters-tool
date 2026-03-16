@@ -6,12 +6,13 @@ import NavBar from "@/components/NavBar";
 import programsData from "@/data/programs.json";
 import employmentData from "@/data/employment.json";
 import casesData from "@/data/cases.json";
+import { compassCases } from "@/lib/compassCases";
 import type { RawProgram, RawEmployment, RawCase } from "@/lib/types";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 const programs = programsData as any as RawProgram[];
 const employment = employmentData as any as RawEmployment[];
-const cases = casesData as any as RawCase[];
+const cases = [...(casesData as any as RawCase[]), ...compassCases];
 
 const CURRENCY_SYMBOL: Record<string, string> = {
   GBP: "£", USD: "$", HKD: "HK$", SGD: "S$", AUD: "A$", EUR: "€",

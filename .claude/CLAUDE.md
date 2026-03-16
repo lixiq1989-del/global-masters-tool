@@ -11,15 +11,20 @@
 ## 数据
 - `data/programs.json` — 1540 个项目
 - `data/employment.json` — 1599 条就业数据
-- `data/cases.json` — 25345 条录取案例
+- `data/cases.json` — 52718 条录取案例（WSO/GMAT Club/ChaseDream/飞书模板）
+- `data/compass_cases_v3.json` — 27238 条录取案例（指南者留学，单独存放）
+- 运行时合并使用，共 79956 条案例（通过 `lib/compassCases.ts` 合并）
 
 ## 页面路由
 - `/` — 智能推荐（InputForm → recommend() → ResultSection）
 - `/explore` — 项目探索（筛选浏览全部项目）
 - `/school/[name]` — 学校详情（项目列表 + 录取画像 + 就业统计）
+- `/program/[id]` — 项目详情（基本信息 + 录取画像 + 就业统计）
 - `/compare` — 项目对比
 - `/report` — 申请规划报告
 - `/favorites` — 收藏列表
+- `/profile` — 我的档案
+- `/tracker` — 申请进度
 
 ## 部署
 - Vercel: https://uk-masters-tool.vercel.app

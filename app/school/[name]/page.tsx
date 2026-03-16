@@ -7,13 +7,16 @@ import NavBar from "@/components/NavBar";
 import programsData from "@/data/programs.json";
 import employmentData from "@/data/employment.json";
 import casesData from "@/data/cases.json";
+import { compassCases } from "@/lib/compassCases";
 import type { RawProgram, RawEmployment, RawCase } from "@/lib/types";
 import { WechatGroupCTA } from "@/components/WechatGroupModal";
+import { useFavorites } from "@/hooks/useFavorites";
+import { useAuthContext } from "@/components/AuthProvider";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 const programs = programsData as any as RawProgram[];
 const employment = employmentData as any as RawEmployment[];
-const cases = casesData as any as RawCase[];
+const cases = [...(casesData as any as RawCase[]), ...compassCases];
 
 const CURRENCY_SYMBOL: Record<string, string> = {
   GBP: "£", USD: "$", HKD: "HK$", SGD: "S$", AUD: "A$", EUR: "€",
@@ -90,6 +93,13 @@ function countDistribution(items: string[]): { label: string; count: number; pct
 export default function SchoolPage() {
   const params = useParams();
   const schoolName = decodeURIComponent(params.name as string);
+  const { favorites, toggle: toggleFav, loaded: favsLoaded } = useFavorites();
+  const { requireAuth } = useAuthContext();
+
+  function guardedToggleFav(id: number) {
+    if (!requireAuth(() => toggleFav(id))) return;
+    toggleFav(id);
+  }
 
   const schoolPrograms = useMemo(
     () => programs.filter((p) => p.school_name === schoolName),
@@ -185,12 +195,20 @@ export default function SchoolPage() {
                 {location && <span className="bg-white/15 px-2 py-0.5 rounded-full">📍 {location}</span>}
               </div>
             </div>
-            <Link
-              href={`/explore?school=${encodeURIComponent(schoolName)}`}
-              className="shrink-0 px-3 py-2 bg-white/15 hover:bg-white/25 border border-white/30 rounded-xl text-xs font-medium transition-colors"
-            >
-              在探索页查看
-            </Link>
+            <div className="flex gap-2 shrink-0">
+              <Link
+                href="/tracker"
+                className="px-3 py-2 bg-white/15 hover:bg-white/25 border border-white/30 rounded-xl text-xs font-medium transition-colors"
+              >
+                📊 申请进度
+              </Link>
+              <Link
+                href={`/explore?school=${encodeURIComponent(schoolName)}`}
+                className="px-3 py-2 bg-white/15 hover:bg-white/25 border border-white/30 rounded-xl text-xs font-medium transition-colors"
+              >
+                在探索页查看
+              </Link>
+            </div>
           </div>
 
           {/* Quick stats */}
@@ -297,10 +315,10 @@ export default function SchoolPage() {
                 <div key={p.id} className="flex items-center gap-3 bg-gray-50 rounded-xl px-4 py-3 hover:bg-gray-100 transition-colors">
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-0.5">
-                      <a href={p.program_url} target="_blank" rel="noopener noreferrer"
+                      <Link href={`/program/${p.id}`}
                         className="text-sm font-semibold text-blue-700 hover:underline truncate">
                         {p.program_name}
-                      </a>
+                      </Link>
                     </div>
                     <div className="flex flex-wrap gap-1.5">
                       <MiniTag>{p.program_category}</MiniTag>
@@ -328,6 +346,15 @@ export default function SchoolPage() {
                       <p className="text-[10px] text-gray-400">均薪 £{emp.average_salary.toLocaleString()}</p>
                     )}
                   </div>
+                  {favsLoaded && (
+                    <button
+                      onClick={() => guardedToggleFav(p.id)}
+                      className={`text-lg shrink-0 transition-colors ${favorites.has(p.id) ? "text-yellow-400" : "text-gray-300 hover:text-yellow-400"}`}
+                      title={favorites.has(p.id) ? "取消收藏" : "收藏"}
+                    >
+                      {favorites.has(p.id) ? "★" : "☆"}
+                    </button>
+                  )}
                 </div>
               );
             })}

@@ -24,10 +24,26 @@ for (const e of employment) empMap.set(e.program_key ?? `${e.school_name}__${e.p
 
 const KEY = "uk-masters-favorites";
 
+type GroupMode = "country" | "difficulty";
+
+const DIFFICULTY_LABELS: Record<string, { label: string; emoji: string }> = {
+  reach:  { label: "冲刺", emoji: "🔥" },
+  match:  { label: "匹配", emoji: "✅" },
+  safety: { label: "保底", emoji: "🛡️" },
+};
+
+function classifyByDifficulty(p: RawProgram): string {
+  const d = p.admission_difficulty_score;
+  if (d >= 8) return "reach";
+  if (d >= 6) return "match";
+  return "safety";
+}
+
 export default function FavoritesPage() {
   const { authed, loaded: authLoaded, requireAuth } = useAuthContext();
   const [favIds, setFavIds] = useState<number[]>([]);
   const [loaded, setLoaded] = useState(false);
+  const [groupMode, setGroupMode] = useState<GroupMode>("country");
 
   useEffect(() => {
     try {
@@ -54,7 +70,7 @@ export default function FavoritesPage() {
   );
 
   // Group by country
-  const grouped = useMemo(() => {
+  const groupedByCountry = useMemo(() => {
     const map: Record<string, RawProgram[]> = {};
     for (const p of favPrograms) {
       const country = (p as any).country as string;
@@ -63,6 +79,17 @@ export default function FavoritesPage() {
     }
     return map;
   }, [favPrograms]);
+
+  // Group by difficulty (reach / match / safety)
+  const groupedByDifficulty = useMemo(() => {
+    const map: Record<string, RawProgram[]> = { reach: [], match: [], safety: [] };
+    for (const p of favPrograms) {
+      map[classifyByDifficulty(p)].push(p);
+    }
+    return map;
+  }, [favPrograms]);
+
+  const grouped = groupMode === "country" ? groupedByCountry : groupedByDifficulty;
 
   return (
     <div className="min-h-screen">
@@ -90,6 +117,14 @@ export default function FavoritesPage() {
               </p>
             </div>
             <div className="flex gap-2">
+              {favPrograms.length > 0 && (
+                <Link
+                  href="/tracker"
+                  className="px-3 py-1.5 bg-green-50 border border-green-200 rounded-lg text-xs text-green-700 hover:bg-green-100"
+                >
+                  📊 申请进度
+                </Link>
+              )}
               {favPrograms.length >= 2 && (
                 <Link
                   href="/compare"
@@ -124,11 +159,29 @@ export default function FavoritesPage() {
             </div>
           )}
 
-          {Object.entries(grouped).map(([country, progs]) => (
-            <div key={country} className="mb-6 last:mb-0">
+          {/* Group mode toggle */}
+          {favPrograms.length > 0 && (
+            <div className="flex gap-2 mb-4">
+              <button
+                onClick={() => setGroupMode("country")}
+                className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${groupMode === "country" ? "bg-blue-600 text-white" : "bg-gray-100 text-gray-600 hover:bg-gray-200"}`}
+              >
+                按国家
+              </button>
+              <button
+                onClick={() => setGroupMode("difficulty")}
+                className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${groupMode === "difficulty" ? "bg-blue-600 text-white" : "bg-gray-100 text-gray-600 hover:bg-gray-200"}`}
+              >
+                冲刺 / 匹配 / 保底
+              </button>
+            </div>
+          )}
+
+          {Object.entries(grouped).filter(([, progs]) => progs.length > 0).map(([key, progs]) => (
+            <div key={key} className="mb-6 last:mb-0">
               <h3 className="text-sm font-semibold text-gray-600 mb-2 flex items-center gap-1.5">
-                <span>{COUNTRY_FLAG[country] || ""}</span>
-                {country}
+                <span>{groupMode === "country" ? (COUNTRY_FLAG[key] || "") : (DIFFICULTY_LABELS[key]?.emoji || "")}</span>
+                {groupMode === "country" ? key : (DIFFICULTY_LABELS[key]?.label || key)}
                 <span className="text-xs text-gray-400 font-normal">({progs.length})</span>
               </h3>
               <div className="space-y-2">

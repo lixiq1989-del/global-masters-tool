@@ -2,6 +2,7 @@
 
 import { useMemo } from "react";
 import casesData from "@/data/cases.json";
+import { compassCases } from "@/lib/compassCases";
 import type { UserProfile } from "@/lib/types";
 
 interface RawCaseLocal {
@@ -13,7 +14,7 @@ interface RawCaseLocal {
   admission_result?: string;
 }
 
-const allCases = casesData as unknown as RawCaseLocal[];
+const allCases = [...(casesData as unknown as RawCaseLocal[]), ...(compassCases as unknown as RawCaseLocal[])];
 
 // Parse GPA string to percentage (0-100)
 function parseGPAToPercent(raw: string | null | undefined): number | null {

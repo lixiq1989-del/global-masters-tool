@@ -115,14 +115,12 @@ export default function ProgramCard({
               查看该校更多 →
             </Link>
           </p>
-          <a
-            href={p.program_url}
-            target="_blank"
-            rel="noopener noreferrer"
+          <Link
+            href={`/program/${p.id}`}
             className="text-[15px] font-semibold text-blue-700 hover:underline leading-tight block"
           >
             {p.program_name}
-          </a>
+          </Link>
           <div className="flex flex-wrap gap-1.5 mt-1.5">
             <Badge>{p.program_category}</Badge>
             <Badge>{p.school_tier}</Badge>

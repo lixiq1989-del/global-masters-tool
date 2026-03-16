@@ -1,8 +1,9 @@
 /**
- * Load compass_cases_v3.json and convert to RawCase format
+ * Load compass_cases_slim.json and convert to RawCase format
  * Kept separate from cases.json — merged at runtime
+ * Slim format: {cid, sn, sc, sa, co, ci, as, am, at, gpa, lang, gmat, ws, yr}
  */
-import compassRaw from "@/data/compass_cases_v3.json";
+import compassRaw from "@/data/compass_cases_slim.json";
 import type { RawCase } from "./types";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -49,50 +50,28 @@ function normalizeSchoolName(en: string | null): string {
   return SCHOOL_NAME_MAP[en] || en;
 }
 
-// Convert compass case to RawCase
+// Convert slim compass case to RawCase
 function toRawCase(c: any, idx: number): RawCase {
   return {
-    id: 900000 + idx, // offset to avoid collision with existing IDs
-    school_name: normalizeSchoolName(c.school_name_en),
-    program_name: c.program_title || "",
+    id: 900000 + idx,
+    school_name: normalizeSchoolName(c.sn),
+    program_name: "",
     applicant_country: "China",
-    applicant_background_school: c.applicant_school || null,
-    applicant_background_tier: c.applicant_tier || null,
-    applicant_major: c.applicant_major || null,
-    applicant_gpa: c.applicant_gpa || null,
-    applicant_language_score: c.applicant_language || null,
-    applicant_gmat_gre: c.applicant_gmat_gre || null,
-    applicant_internships: c.applicant_work_status || null,
+    applicant_background_school: c.as || null,
+    applicant_background_tier: c.at || null,
+    applicant_major: c.am || null,
+    applicant_gpa: c.gpa || null,
+    applicant_language_score: c.lang || null,
+    applicant_gmat_gre: c.gmat || null,
+    applicant_internships: c.ws || null,
     admission_result: "admitted",
-    entry_year: c.admission_year || null,
+    entry_year: c.yr || null,
     source_platform: "compassedu",
-    source_url: c.source_url || "",
-    case_summary: c.description || "",
+    source_url: "",
+    case_summary: "",
     confidence_score: 4,
-    notes: c.detail_raw || "",
+    notes: "",
   } as any;
 }
 
 export const compassCases: RawCase[] = raw.map((c, i) => toRawCase(c, i));
-
-// Export raw compass data type for separate UI display
-export interface CompassCase {
-  compass_id: number;
-  school_name_cn: string | null;
-  school_name_en: string | null;
-  school_abbr: string | null;
-  country: string;
-  applicant_school: string | null;
-  applicant_major: string | null;
-  applicant_tier: string | null;
-  applicant_gpa: string | null;
-  applicant_language: string | null;
-  applicant_gmat_gre: string | null;
-  applicant_work_status: string | null;
-  detail_raw: string | null;
-  admission_year: number | null;
-  admission_time: string | null;
-  source_url: string;
-}
-
-export const compassRawCases: CompassCase[] = raw as CompassCase[];

@@ -11,3 +11,4 @@ data/template_*
 data/*.csv
 scripts/
 .vercel
+data/compass_cases_v3.json

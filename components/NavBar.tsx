@@ -10,8 +10,7 @@ const TABS = [
   { href: "/explore", label: "项目探索", icon: "🔍", desc: "自由浏览全部项目" },
   { href: "/compare", label: "项目对比", icon: "⚖️", desc: "横向对比" },
   { href: "/report", label: "申请规划", icon: "📋", desc: "生成申请报告" },
-  { href: "/favorites", label: "收藏", icon: "★", desc: "" },
-  { href: "/tracker", label: "申请进度", icon: "📊", desc: "DDL·面试·进度管理" },
+  { href: "/tracker", label: "我的申请", icon: "📊", desc: "收藏·DDL·面试·进度" },
   { href: "/profile", label: "我的档案", icon: "👤", desc: "" },
 ];
 

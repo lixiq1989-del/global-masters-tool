@@ -66,6 +66,8 @@ export default function TrackerPage() {
   const [viewMode, setViewMode] = useState<ViewMode>("kanban");
   const [editingDeadline, setEditingDeadline] = useState<number | null>(null);
   const [editingInterview, setEditingInterview] = useState<number | null>(null);
+  const [addSearch, setAddSearch] = useState("");
+  const [showAddPanel, setShowAddPanel] = useState(false);
 
   const allIds = useMemo(() => {
     const ids = new Set<number>();
@@ -148,8 +150,8 @@ export default function TrackerPage() {
         <div className="bg-gradient-to-br from-[#1e3a5f] to-[#2563eb] rounded-2xl shadow-lg text-white p-6">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h2 className="text-xl font-bold">申请进度管理</h2>
-              <p className="text-blue-200 text-xs mt-1">跟踪每个项目的申请状态、截止日期和面试安排</p>
+              <h2 className="text-xl font-bold">我的申请</h2>
+              <p className="text-blue-200 text-xs mt-1">收藏的项目在这里管理 · 进度 · 截止日期 · 面试</p>
             </div>
           </div>
           <div className="grid grid-cols-3 sm:grid-cols-6 gap-2">
@@ -161,6 +163,71 @@ export default function TrackerPage() {
               </div>
             ))}
           </div>
+        </div>
+
+        {/* Quick add project */}
+        <div className="bg-white rounded-2xl shadow-md border border-gray-100 p-4">
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => setShowAddPanel(!showAddPanel)}
+              className="px-3 py-1.5 bg-blue-600 text-white rounded-xl text-xs font-medium hover:bg-blue-700 shrink-0"
+            >
+              + 添加项目
+            </button>
+            <p className="text-xs text-gray-400">搜索并添加项目到申请进度，或在"智能推荐""项目探索"中点 ★ 收藏</p>
+          </div>
+          {showAddPanel && (
+            <div className="mt-3">
+              <input
+                type="text"
+                placeholder="搜索学校或项目名称..."
+                value={addSearch}
+                onChange={(e) => setAddSearch(e.target.value)}
+                className="w-full border border-gray-300 rounded-xl px-4 py-2 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                autoFocus
+              />
+              {addSearch.trim().length >= 2 && (
+                <div className="mt-2 max-h-48 overflow-y-auto space-y-1">
+                  {programs
+                    .filter((p) => {
+                      const q = addSearch.toLowerCase();
+                      return (
+                        p.school_name.toLowerCase().includes(q) ||
+                        p.program_name.toLowerCase().includes(q)
+                      );
+                    })
+                    .slice(0, 10)
+                    .map((p) => (
+                      <div
+                        key={p.id}
+                        className="flex items-center justify-between bg-gray-50 rounded-lg px-3 py-2 hover:bg-gray-100"
+                      >
+                        <div className="min-w-0">
+                          <span className="text-xs text-gray-400">{COUNTRY_FLAG[(p as any).country] || ""} {p.school_name}</span>
+                          <p className="text-sm font-medium text-gray-800 truncate">{p.program_name}</p>
+                        </div>
+                        {allIds.has(p.id) ? (
+                          <span className="text-[10px] text-green-600 font-medium shrink-0 ml-2">已添加</span>
+                        ) : (
+                          <button
+                            onClick={() => { setStatus(p.id, "interested"); setAddSearch(""); }}
+                            className="text-xs bg-blue-600 text-white px-2 py-1 rounded-lg hover:bg-blue-700 shrink-0 ml-2"
+                          >
+                            添加
+                          </button>
+                        )}
+                      </div>
+                    ))}
+                  {programs.filter((p) => {
+                    const q = addSearch.toLowerCase();
+                    return p.school_name.toLowerCase().includes(q) || p.program_name.toLowerCase().includes(q);
+                  }).length === 0 && (
+                    <p className="text-xs text-gray-400 text-center py-4">没有找到匹配的项目</p>
+                  )}
+                </div>
+              )}
+            </div>
+          )}
         </div>
 
         {/* Urgent alerts */}
@@ -216,7 +283,7 @@ export default function TrackerPage() {
             <p className="text-sm text-gray-400 mb-4">先去收藏感兴趣的项目，然后在这里管理申请进度</p>
             <div className="flex justify-center gap-3">
               <Link href="/" className="px-4 py-2 bg-blue-600 text-white rounded-xl text-sm hover:bg-blue-700">去智能推荐</Link>
-              <Link href="/favorites" className="px-4 py-2 bg-gray-100 text-gray-700 rounded-xl text-sm hover:bg-gray-200">我的收藏</Link>
+              <Link href="/explore" className="px-4 py-2 bg-gray-100 text-gray-700 rounded-xl text-sm hover:bg-gray-200">浏览项目</Link>
             </div>
           </div>
         ) : viewMode === "kanban" ? (

@@ -6,10 +6,19 @@ const TRACKER_KEY = "masters-tool-tracker";
 
 export type TrackerStatus = "interested" | "preparing" | "writing" | "submitted" | "interview" | "offer";
 
+export interface InterviewInfo {
+  date: string;          // ISO date string
+  format: "video" | "phone" | "onsite" | "";
+  notes: string;
+  result: "pending" | "passed" | "rejected" | "";
+}
+
 export interface TrackerEntry {
   status: TrackerStatus;
   notes: string;
   updated_at: string;
+  deadline: string;      // application deadline ISO date
+  interview: InterviewInfo | null;
 }
 
 export type TrackerData = Record<number, TrackerEntry>;
@@ -47,6 +56,8 @@ export function useTracker() {
           ...prev[programId],
           status,
           notes: prev[programId]?.notes || "",
+          deadline: prev[programId]?.deadline || "",
+          interview: prev[programId]?.interview || null,
           updated_at: new Date().toISOString(),
         },
       };
@@ -60,6 +71,26 @@ export function useTracker() {
       const entry = prev[programId];
       if (!entry) return prev;
       const next = { ...prev, [programId]: { ...entry, notes, updated_at: new Date().toISOString() } };
+      persist(next);
+      return next;
+    });
+  }, [persist]);
+
+  const setDeadline = useCallback((programId: number, deadline: string) => {
+    setTracker((prev) => {
+      const entry = prev[programId];
+      if (!entry) return prev;
+      const next = { ...prev, [programId]: { ...entry, deadline, updated_at: new Date().toISOString() } };
+      persist(next);
+      return next;
+    });
+  }, [persist]);
+
+  const setInterview = useCallback((programId: number, interview: InterviewInfo | null) => {
+    setTracker((prev) => {
+      const entry = prev[programId];
+      if (!entry) return prev;
+      const next = { ...prev, [programId]: { ...entry, interview, updated_at: new Date().toISOString() } };
       persist(next);
       return next;
     });
@@ -79,5 +110,5 @@ export function useTracker() {
     try { localStorage.removeItem(TRACKER_KEY); } catch { /* ignore */ }
   }, []);
 
-  return { tracker, loaded, setStatus, setNotes, remove, clear };
+  return { tracker, loaded, setStatus, setNotes, setDeadline, setInterview, remove, clear };
 }

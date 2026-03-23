@@ -11,12 +11,11 @@ const TABS = [
   { href: "/compare", label: "项目对比", icon: "⚖️", desc: "横向对比" },
   { href: "/report", label: "申请规划", icon: "📋", desc: "生成申请报告" },
   { href: "/favorites", label: "收藏", icon: "★", desc: "" },
+  { href: "/tracker", label: "申请进度", icon: "📊", desc: "DDL·面试·进度管理" },
+  { href: "/profile", label: "我的档案", icon: "👤", desc: "" },
 ];
 
-const USER_MENU = [
-  { href: "/profile", label: "我的档案", icon: "👤" },
-  { href: "/tracker", label: "申请进度", icon: "📊" },
-];
+const USER_MENU: { href: string; label: string; icon: string }[] = [];
 
 export default function NavBar() {
   const pathname = usePathname();

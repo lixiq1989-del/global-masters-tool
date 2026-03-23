@@ -1,0 +1,1393 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 全球商科硕士选校工具</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Noto+Sans+SC:wght@400;500;600;700;900&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Noto Sans SC', 'Inter', -apple-system, sans-serif;
+    background: #f0f4ff;
+    color: #1a1a2e;
+    line-height: 1.6;
+  }
+
+  .page {
+    max-width: 420px;
+    margin: 0 auto;
+    background: white;
+    min-height: 100vh;
+  }
+
+  /* ── Hero ── */
+  .hero {
+    background: linear-gradient(135deg, #1e3a5f 0%, #2563eb 60%, #3b82f6 100%);
+    padding: 48px 28px 40px;
+    color: white;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 200px; height: 200px;
+    background: rgba(255,255,255,0.06);
+    border-radius: 50%;
+  }
+  .hero::after {
+    content: '';
+    position: absolute;
+    bottom: -40px; left: -40px;
+    width: 150px; height: 150px;
+    background: rgba(255,255,255,0.04);
+    border-radius: 50%;
+  }
+  .hero-badge {
+    display: inline-block;
+    background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 20px;
+    padding: 4px 14px;
+    font-size: 12px;
+    font-weight: 500;
+    margin-bottom: 16px;
+    letter-spacing: 0.5px;
+  }
+  .hero h1 {
+    font-size: 28px;
+    font-weight: 900;
+    line-height: 1.3;
+    margin-bottom: 12px;
+    letter-spacing: -0.5px;
+  }
+  .hero h1 span {
+    background: linear-gradient(90deg, #93c5fd, #bfdbfe);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .hero-sub {
+    font-size: 14px;
+    color: rgba(255,255,255,0.8);
+    line-height: 1.7;
+    margin-bottom: 24px;
+  }
+
+  /* ── Stats ── */
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    position: relative;
+    z-index: 1;
+  }
+  .stat-card {
+    background: rgba(255,255,255,0.12);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 14px;
+    padding: 14px;
+    text-align: center;
+  }
+  .stat-num {
+    font-size: 24px;
+    font-weight: 800;
+    color: white;
+    letter-spacing: -0.5px;
+  }
+  .stat-label {
+    font-size: 11px;
+    color: rgba(255,255,255,0.7);
+    margin-top: 2px;
+  }
+
+  /* ── Section ── */
+  .section {
+    padding: 32px 24px;
+  }
+  .section-title {
+    font-size: 20px;
+    font-weight: 800;
+    margin-bottom: 6px;
+    color: #1e3a5f;
+  }
+  .section-sub {
+    font-size: 13px;
+    color: #6b7280;
+    margin-bottom: 20px;
+  }
+
+  /* ── Feature Cards ── */
+  .features {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .feature-card {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+    padding: 20px;
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    transition: transform 0.2s;
+  }
+  .feature-card:hover { transform: translateY(-1px); }
+  .feature-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    flex-shrink: 0;
+  }
+  .feature-icon.blue { background: linear-gradient(135deg, #dbeafe, #bfdbfe); }
+  .feature-icon.green { background: linear-gradient(135deg, #d1fae5, #a7f3d0); }
+  .feature-icon.purple { background: linear-gradient(135deg, #ede9fe, #ddd6fe); }
+  .feature-icon.orange { background: linear-gradient(135deg, #ffedd5, #fed7aa); }
+  .feature-icon.pink { background: linear-gradient(135deg, #fce7f3, #fbcfe8); }
+  .feature-icon.teal { background: linear-gradient(135deg, #ccfbf1, #99f6e4); }
+  .feature-name {
+    font-size: 15px;
+    font-weight: 700;
+    color: #1e3a5f;
+    margin-bottom: 4px;
+  }
+  .feature-desc {
+    font-size: 12px;
+    color: #6b7280;
+    line-height: 1.6;
+  }
+  .feature-tag {
+    display: inline-block;
+    background: #eff6ff;
+    color: #2563eb;
+    font-size: 10px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 10px;
+    margin-top: 6px;
+  }
+
+  /* ── Countries ── */
+  .countries {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+  .country-pill {
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 20px;
+    padding: 6px 14px;
+    font-size: 13px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .country-pill .count {
+    color: #2563eb;
+    font-weight: 700;
+    font-size: 12px;
+  }
+
+  /* ── Who section ── */
+  .who-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .who-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: #f8fafc;
+    border-radius: 12px;
+    padding: 14px 16px;
+  }
+  .who-emoji {
+    font-size: 24px;
+    flex-shrink: 0;
+  }
+  .who-text {
+    font-size: 13px;
+    color: #374151;
+    font-weight: 500;
+  }
+
+  /* ── Divider ── */
+  .divider {
+    height: 8px;
+    background: #f0f4ff;
+  }
+
+  /* ── CTA ── */
+  .cta {
+    background: linear-gradient(135deg, #1e3a5f 0%, #2563eb 100%);
+    padding: 32px 24px;
+    text-align: center;
+    color: white;
+  }
+  .cta h3 {
+    font-size: 18px;
+    font-weight: 800;
+    margin-bottom: 8px;
+  }
+  .cta p {
+    font-size: 13px;
+    color: rgba(255,255,255,0.7);
+    margin-bottom: 20px;
+  }
+  .cta-btn {
+    display: inline-block;
+    background: white;
+    color: #2563eb;
+    font-size: 15px;
+    font-weight: 700;
+    padding: 12px 32px;
+    border-radius: 12px;
+    text-decoration: none;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.15);
+  }
+  .cta-note {
+    font-size: 11px;
+    color: rgba(255,255,255,0.5);
+    margin-top: 12px;
+  }
+
+  /* ── Flow section ── */
+  .flow-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    position: relative;
+  }
+  .flow-steps::before {
+    content: '';
+    position: absolute;
+    left: 21px;
+    top: 44px;
+    bottom: 44px;
+    width: 2px;
+    background: #e2e8f0;
+  }
+  .flow-step {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    position: relative;
+    z-index: 1;
+  }
+  .flow-num {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #2563eb, #1e3a5f);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: 800;
+    flex-shrink: 0;
+  }
+  .flow-content {
+    padding-top: 8px;
+  }
+  .flow-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: #1e3a5f;
+    margin-bottom: 2px;
+  }
+  .flow-desc {
+    font-size: 12px;
+    color: #6b7280;
+  }
+
+  /* ── Highlight box ── */
+  .highlight-box {
+    background: linear-gradient(135deg, #eff6ff, #f0f4ff);
+    border: 1px solid #bfdbfe;
+    border-radius: 16px;
+    padding: 20px;
+    margin-top: 20px;
+    text-align: center;
+  }
+  .highlight-box .big {
+    font-size: 36px;
+    font-weight: 900;
+    color: #2563eb;
+    letter-spacing: -1px;
+  }
+  .highlight-box .label {
+    font-size: 12px;
+    color: #6b7280;
+    margin-top: 4px;
+  }
+
+  /* ── Comparison table ── */
+  .compare-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+    margin-top: 16px;
+  }
+  .compare-table th {
+    background: #f8fafc;
+    padding: 10px 12px;
+    text-align: left;
+    font-weight: 600;
+    color: #6b7280;
+    border-bottom: 2px solid #e2e8f0;
+  }
+  .compare-table th:last-child {
+    color: #2563eb;
+    text-align: center;
+  }
+  .compare-table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid #f1f5f9;
+    color: #374151;
+  }
+  .compare-table td:last-child {
+    text-align: center;
+    font-weight: 700;
+    color: #2563eb;
+  }
+  .check { color: #10b981; font-weight: bold; }
+  .cross { color: #d1d5db; }
+
+  /* ── Phone Mockup ── */
+  .phone-frame {
+    background: #1a1a2e;
+    border-radius: 28px;
+    padding: 12px;
+    margin: 0 auto 20px;
+    max-width: 340px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.15), 0 0 0 1px rgba(0,0,0,0.05);
+  }
+  .phone-screen {
+    background: white;
+    border-radius: 18px;
+    overflow: hidden;
+  }
+  .phone-status {
+    background: #1e3a5f;
+    padding: 6px 16px;
+    display: flex;
+    justify-content: space-between;
+    font-size: 10px;
+    color: rgba(255,255,255,0.7);
+  }
+  .phone-nav {
+    background: linear-gradient(135deg, #1e3a5f, #2563eb);
+    padding: 10px 14px;
+    color: white;
+    font-size: 11px;
+    font-weight: 700;
+  }
+  .phone-nav small {
+    font-size: 9px;
+    font-weight: 400;
+    color: rgba(255,255,255,0.6);
+    display: block;
+    margin-top: 2px;
+  }
+  .phone-body {
+    padding: 12px;
+    font-size: 11px;
+  }
+  .screen-label {
+    text-align: center;
+    font-size: 13px;
+    font-weight: 600;
+    color: #6b7280;
+    margin-bottom: 20px;
+    margin-top: 4px;
+  }
+
+  /* ── Mock components ── */
+  .mock-input {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 7px 10px;
+    font-size: 11px;
+    color: #374151;
+    margin-bottom: 6px;
+    display: flex;
+    justify-content: space-between;
+  }
+  .mock-input .label { color: #9ca3af; font-size: 10px; }
+  .mock-input .val { font-weight: 600; color: #1e3a5f; }
+  .mock-btn {
+    background: linear-gradient(135deg, #2563eb, #1e3a5f);
+    color: white;
+    border-radius: 10px;
+    padding: 8px;
+    text-align: center;
+    font-size: 12px;
+    font-weight: 700;
+    margin-top: 8px;
+  }
+  .mock-strategy {
+    background: linear-gradient(135deg, #1e3a5f, #2563eb);
+    border-radius: 12px;
+    padding: 12px;
+    color: white;
+    margin-bottom: 10px;
+  }
+  .mock-strategy .title {
+    font-size: 12px;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+  .mock-pills {
+    display: flex;
+    gap: 4px;
+    flex-wrap: wrap;
+    margin-bottom: 6px;
+  }
+  .mock-pill {
+    background: rgba(255,255,255,0.15);
+    border-radius: 8px;
+    padding: 4px 8px;
+    text-align: center;
+    font-size: 9px;
+  }
+  .mock-pill .num { font-size: 14px; font-weight: 800; display: block; }
+  .mock-pill .lbl { color: rgba(255,255,255,0.7); }
+  .mock-strategy-text {
+    font-size: 10px;
+    color: rgba(255,255,255,0.8);
+    line-height: 1.5;
+  }
+  .mock-card {
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 10px;
+    margin-bottom: 8px;
+    position: relative;
+  }
+  .mock-card .school {
+    font-size: 9px;
+    color: #9ca3af;
+  }
+  .mock-card .prog {
+    font-size: 12px;
+    font-weight: 700;
+    color: #1e3a5f;
+    margin: 2px 0;
+  }
+  .mock-card .tags {
+    display: flex;
+    gap: 4px;
+    flex-wrap: wrap;
+  }
+  .mock-tag {
+    font-size: 9px;
+    padding: 2px 6px;
+    border-radius: 6px;
+    font-weight: 500;
+  }
+  .mock-tag.reach { background: #fef2f2; color: #dc2626; }
+  .mock-tag.match { background: #f0fdf4; color: #16a34a; }
+  .mock-tag.safety { background: #f8fafc; color: #6b7280; }
+  .mock-tag.blue { background: #eff6ff; color: #2563eb; }
+  .mock-tag.green { background: #f0fdf4; color: #16a34a; }
+  .mock-card .fav {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    color: #fbbf24;
+    font-size: 14px;
+  }
+  .mock-card .scores {
+    display: flex;
+    gap: 6px;
+    margin-top: 6px;
+  }
+  .mock-score {
+    text-align: center;
+    background: #f8fafc;
+    border-radius: 6px;
+    padding: 3px 8px;
+  }
+  .mock-score .s-label { font-size: 8px; color: #9ca3af; }
+  .mock-score .s-val { font-size: 11px; font-weight: 800; color: #1e3a5f; }
+
+  /* ── Admission profile mock ── */
+  .mock-bar-chart {
+    margin-top: 8px;
+  }
+  .mock-bar-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 5px;
+  }
+  .mock-bar-label {
+    font-size: 9px;
+    color: #6b7280;
+    width: 65px;
+    text-align: right;
+    flex-shrink: 0;
+  }
+  .mock-bar-track {
+    flex: 1;
+    height: 14px;
+    background: #f1f5f9;
+    border-radius: 7px;
+    overflow: hidden;
+    position: relative;
+  }
+  .mock-bar-fill {
+    height: 100%;
+    border-radius: 7px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding-right: 6px;
+  }
+  .mock-bar-fill span {
+    font-size: 8px;
+    font-weight: 700;
+    color: white;
+  }
+  .mock-bar-fill.blue { background: linear-gradient(90deg, #93c5fd, #3b82f6); }
+  .mock-bar-fill.green { background: linear-gradient(90deg, #86efac, #22c55e); }
+  .mock-bar-fill.purple { background: linear-gradient(90deg, #c4b5fd, #8b5cf6); }
+  .mock-bar-fill.orange { background: linear-gradient(90deg, #fdba74, #f97316); }
+
+  .mock-section-title {
+    font-size: 12px;
+    font-weight: 700;
+    color: #1e3a5f;
+    margin-bottom: 4px;
+    margin-top: 10px;
+  }
+  .mock-section-sub {
+    font-size: 9px;
+    color: #9ca3af;
+    margin-bottom: 8px;
+  }
+
+  /* ── Employment mock ── */
+  .mock-salary-box {
+    background: #f0fdf4;
+    border: 1px solid #bbf7d0;
+    border-radius: 10px;
+    padding: 10px;
+    text-align: center;
+    margin-bottom: 8px;
+  }
+  .mock-salary-box .s-num {
+    font-size: 22px;
+    font-weight: 900;
+    color: #16a34a;
+  }
+  .mock-salary-box .s-label {
+    font-size: 9px;
+    color: #6b7280;
+  }
+  .mock-employer-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+  .mock-employer-tag {
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 3px 8px;
+    font-size: 9px;
+    color: #374151;
+  }
+
+  /* ── Compare mock ── */
+  .mock-compare {
+    display: grid;
+    grid-template-columns: 80px 1fr 1fr 1fr;
+    gap: 1px;
+    background: #e2e8f0;
+    border-radius: 10px;
+    overflow: hidden;
+    font-size: 9px;
+  }
+  .mock-compare > div {
+    background: white;
+    padding: 6px 8px;
+  }
+  .mock-compare .hdr {
+    background: #f8fafc;
+    font-weight: 700;
+    color: #1e3a5f;
+    text-align: center;
+  }
+  .mock-compare .label-col {
+    background: #f8fafc;
+    font-weight: 600;
+    color: #6b7280;
+  }
+  .mock-compare .val {
+    text-align: center;
+    color: #374151;
+  }
+  .mock-compare .highlight {
+    color: #2563eb;
+    font-weight: 700;
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- ── Hero ── -->
+  <div class="hero">
+    <div class="hero-badge">🤖 AI 驱动 · 免费使用</div>
+    <h1>全球商科硕士<br><span>智能选校工具</span></h1>
+    <p class="hero-sub">
+      输入你的背景 → AI 自动匹配冲刺/匹配/保底院校<br>
+      覆盖英美港新澳法 6 国，一站搞定选校
+    </p>
+    <div class="stats">
+      <div class="stat-card">
+        <div class="stat-num">117</div>
+        <div class="stat-label">所全球院校</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">1,540</div>
+        <div class="stat-label">个商科硕士项目</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">79,956</div>
+        <div class="stat-label">条真实录取案例</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">1,599</div>
+        <div class="stat-label">条就业薪资数据</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── 覆盖国家 ── -->
+  <div class="section">
+    <div class="section-title">覆盖 6 个国家/地区</div>
+    <div class="section-sub">从英国 G5 到港三新二，全部在一个工具里</div>
+    <div class="countries">
+      <div class="country-pill">🇬🇧 英国 <span class="count">62 校</span></div>
+      <div class="country-pill">🇺🇸 美国 <span class="count">20 校</span></div>
+      <div class="country-pill">🇭🇰 香港 <span class="count">7 校</span></div>
+      <div class="country-pill">🇸🇬 新加坡 <span class="count">3 校</span></div>
+      <div class="country-pill">🇦🇺 澳大利亚 <span class="count">13 校</span></div>
+      <div class="country-pill">🇫🇷 法国 <span class="count">12 校</span></div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ── 核心功能 ── -->
+  <div class="section">
+    <div class="section-title">核心功能</div>
+    <div class="section-sub">不是简单的信息查询，而是真正的智能决策工具</div>
+    <div class="features">
+      <div class="feature-card">
+        <div class="feature-icon blue">🎯</div>
+        <div>
+          <div class="feature-name">AI 智能推荐</div>
+          <div class="feature-desc">输入你的本科、GPA、语言、实习等背景，AI 自动匹配<strong>冲刺 / 匹配 / 保底</strong>三档院校，生成个性化选校方案</div>
+          <div class="feature-tag">核心能力</div>
+        </div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon green">📊</div>
+        <div>
+          <div class="feature-name">录取画像分析</div>
+          <div class="feature-desc">基于 <strong>79,956 条真实案例</strong>，展示每所学校的 GPA 分布、院校背景、语言成绩画像，用数据说话</div>
+          <div class="feature-tag">数据驱动</div>
+        </div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon purple">💼</div>
+        <div>
+          <div class="feature-name">就业数据 & 薪资</div>
+          <div class="feature-desc">覆盖目标行业、平均薪资、Top 雇主等就业统计，帮你从<strong>就业导向</strong>反推选校</div>
+          <div class="feature-tag">就业视角</div>
+        </div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon orange">📋</div>
+        <div>
+          <div class="feature-name">申请规划报告</div>
+          <div class="feature-desc">一键生成完整申请规划：时间线、材料清单、背景提升建议，可导出 PDF</div>
+          <div class="feature-tag">一键报告</div>
+        </div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon pink">🔍</div>
+        <div>
+          <div class="feature-name">项目探索 & 对比</div>
+          <div class="feature-desc">按国家、专业、学费、品牌分自由筛选，支持多项目横向对比，找到最适合你的项目</div>
+        </div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon teal">📈</div>
+        <div>
+          <div class="feature-name">背景提升建议</div>
+          <div class="feature-desc">不只告诉你"适合什么"，还告诉你"怎么变强"——GPA、语言、GMAT、实习的优先级建议</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ── 页面展示：输入背景 ── -->
+  <div class="section">
+    <div class="section-title">实际页面展示</div>
+    <div class="section-sub">以一个真实案例演示：211 财经院校，GPA 3.5，IELTS 7.0</div>
+
+    <!-- Screen 1: 填写背景 -->
+    <div class="screen-label">Step 1 · 填写你的背景</div>
+    <div class="phone-frame">
+      <div class="phone-screen">
+        <div class="phone-status"><span>9:41</span><span>📶 100%</span></div>
+        <div class="phone-nav">AI 全球商科硕士选校工具<small>覆盖 6 国 117 所院校 · 79,956 条录取案例</small></div>
+        <div class="phone-body">
+          <div class="mock-input"><span class="label">本科地区</span><span class="val">🇨🇳 中国大陆</span></div>
+          <div class="mock-input"><span class="label">本科院校</span><span class="val">上海财经大学</span></div>
+          <div class="mock-input"><span class="label">院校层级</span><span class="val">中国 T3（211 / 财经强校）</span></div>
+          <div class="mock-input"><span class="label">专业</span><span class="val">金融学</span></div>
+          <div class="mock-input"><span class="label">GPA</span><span class="val">3.5 / 4.0</span></div>
+          <div class="mock-input"><span class="label">语言成绩</span><span class="val">IELTS 7.0</span></div>
+          <div class="mock-input"><span class="label">GMAT/GRE</span><span class="val">GMAT 710</span></div>
+          <div class="mock-input"><span class="label">实习</span><span class="val">2段：四大审计 + 券商投行</span></div>
+          <div class="mock-input"><span class="label">目标国家</span><span class="val">🇬🇧 英国 🇭🇰 香港 🇸🇬 新加坡</span></div>
+          <div class="mock-input"><span class="label">职业目标</span><span class="val">💰 投行（IBD / M&A）</span></div>
+          <div class="mock-btn">🎯 生成推荐方案</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Screen 2: AI 推荐结果 -->
+    <div class="screen-label">Step 2 · AI 生成选校方案</div>
+    <div class="phone-frame">
+      <div class="phone-screen">
+        <div class="phone-status"><span>9:42</span><span>📶 100%</span></div>
+        <div class="phone-body" style="padding: 0;">
+          <div class="mock-strategy">
+            <div class="title">📋 你的申请策略</div>
+            <div class="mock-pills">
+              <div class="mock-pill"><span class="num">7.8</span><span class="lbl">综合实力</span></div>
+              <div class="mock-pill"><span class="num">3个</span><span class="lbl">冲刺</span></div>
+              <div class="mock-pill"><span class="num">5个</span><span class="lbl">匹配</span></div>
+              <div class="mock-pill"><span class="num">3个</span><span class="lbl">保底</span></div>
+            </div>
+            <div class="mock-strategy-text">
+              你的综合背景实力评分 7.8/10（较强）。建议申请组合：2-3 个冲刺 + 3-4 个核心匹配 + 2 个保底。重点匹配院校：Imperial College London、The University of Edinburgh、CUHK。有 8 个项目与你的职业目标「投行」高度匹配。
+            </div>
+          </div>
+
+          <div style="padding: 0 12px 12px;">
+            <!-- Reach card -->
+            <div class="mock-card">
+              <div class="fav">★</div>
+              <div class="school">🇬🇧 London School of Economics</div>
+              <div class="prog">MSc Finance</div>
+              <div class="tags">
+                <span class="mock-tag reach">🔥 冲刺</span>
+                <span class="mock-tag blue">Finance</span>
+                <span class="mock-tag green">🎯 投行匹配</span>
+              </div>
+              <div class="scores">
+                <div class="mock-score"><div class="s-label">品牌</div><div class="s-val">9.5</div></div>
+                <div class="mock-score"><div class="s-label">难度</div><div class="s-val">9.2</div></div>
+                <div class="mock-score"><div class="s-label">匹配</div><div class="s-val" style="color:#2563eb">85%</div></div>
+              </div>
+            </div>
+
+            <!-- Match card -->
+            <div class="mock-card">
+              <div class="fav">★</div>
+              <div class="school">🇬🇧 Imperial College London</div>
+              <div class="prog">MSc Finance & Accounting</div>
+              <div class="tags">
+                <span class="mock-tag match">✅ 匹配</span>
+                <span class="mock-tag blue">Finance & Accounting</span>
+                <span class="mock-tag green">🎯 投行匹配</span>
+              </div>
+              <div class="scores">
+                <div class="mock-score"><div class="s-label">品牌</div><div class="s-val">9.3</div></div>
+                <div class="mock-score"><div class="s-label">难度</div><div class="s-val">8.1</div></div>
+                <div class="mock-score"><div class="s-label">匹配</div><div class="s-val" style="color:#16a34a">92%</div></div>
+              </div>
+            </div>
+
+            <!-- Match card 2 -->
+            <div class="mock-card">
+              <div class="fav" style="color:#d1d5db">☆</div>
+              <div class="school">🇭🇰 Chinese University of Hong Kong</div>
+              <div class="prog">MSc Finance</div>
+              <div class="tags">
+                <span class="mock-tag match">✅ 匹配</span>
+                <span class="mock-tag blue">Finance</span>
+              </div>
+              <div class="scores">
+                <div class="mock-score"><div class="s-label">品牌</div><div class="s-val">8.0</div></div>
+                <div class="mock-score"><div class="s-label">难度</div><div class="s-val">7.5</div></div>
+                <div class="mock-score"><div class="s-label">匹配</div><div class="s-val" style="color:#16a34a">88%</div></div>
+              </div>
+            </div>
+
+            <!-- Safety card -->
+            <div class="mock-card">
+              <div class="fav" style="color:#d1d5db">☆</div>
+              <div class="school">🇬🇧 University of Warwick</div>
+              <div class="prog">MSc Finance</div>
+              <div class="tags">
+                <span class="mock-tag safety">🛡️ 保底</span>
+                <span class="mock-tag blue">Finance</span>
+              </div>
+              <div class="scores">
+                <div class="mock-score"><div class="s-label">品牌</div><div class="s-val">7.8</div></div>
+                <div class="mock-score"><div class="s-label">难度</div><div class="s-val">6.5</div></div>
+                <div class="mock-score"><div class="s-label">匹配</div><div class="s-val" style="color:#16a34a">95%</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Screen 3: 录取画像 -->
+    <div class="screen-label">Step 3 · 学校录取画像</div>
+    <div class="phone-frame">
+      <div class="phone-screen">
+        <div class="phone-status"><span>9:43</span><span>📶 100%</span></div>
+        <div class="phone-body">
+          <div style="background:linear-gradient(135deg,#1e3a5f,#2563eb);border-radius:12px;padding:12px;color:white;margin-bottom:10px;">
+            <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px;">
+              <span style="font-size:16px;">🇬🇧</span>
+              <span style="font-size:14px;font-weight:800;">Imperial College London</span>
+            </div>
+            <div style="display:flex;gap:4px;font-size:9px;">
+              <span style="background:rgba(255,255,255,0.15);padding:2px 8px;border-radius:10px;">G5</span>
+              <span style="background:rgba(255,255,255,0.15);padding:2px 8px;border-radius:10px;">UK</span>
+              <span style="background:rgba(255,255,255,0.15);padding:2px 8px;border-radius:10px;">📍 London</span>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px;">
+              <div style="background:rgba(255,255,255,0.12);border-radius:8px;padding:6px;text-align:center;"><div style="font-size:16px;font-weight:800;">12</div><div style="font-size:8px;color:rgba(255,255,255,0.6);">项目</div></div>
+              <div style="background:rgba(255,255,255,0.12);border-radius:8px;padding:6px;text-align:center;"><div style="font-size:16px;font-weight:800;">6</div><div style="font-size:8px;color:rgba(255,255,255,0.6);">专业</div></div>
+              <div style="background:rgba(255,255,255,0.12);border-radius:8px;padding:6px;text-align:center;"><div style="font-size:16px;font-weight:800;">847</div><div style="font-size:8px;color:rgba(255,255,255,0.6);">案例</div></div>
+              <div style="background:rgba(255,255,255,0.12);border-radius:8px;padding:6px;text-align:center;"><div style="font-size:16px;font-weight:800;">12</div><div style="font-size:8px;color:rgba(255,255,255,0.6);">就业</div></div>
+            </div>
+          </div>
+
+          <div class="mock-section-title">录取背景画像</div>
+          <div class="mock-section-sub">基于 623 条中国学生录取数据统计</div>
+
+          <div style="font-size:10px;font-weight:600;color:#6b7280;margin-bottom:4px;">本科院校层级</div>
+          <div class="mock-bar-chart">
+            <div class="mock-bar-row">
+              <div class="mock-bar-label">985</div>
+              <div class="mock-bar-track"><div class="mock-bar-fill blue" style="width:45%"><span>45%</span></div></div>
+            </div>
+            <div class="mock-bar-row">
+              <div class="mock-bar-label">211 / 财经</div>
+              <div class="mock-bar-track"><div class="mock-bar-fill blue" style="width:32%"><span>32%</span></div></div>
+            </div>
+            <div class="mock-bar-row">
+              <div class="mock-bar-label">海外本科</div>
+              <div class="mock-bar-track"><div class="mock-bar-fill blue" style="width:15%"><span>15%</span></div></div>
+            </div>
+            <div class="mock-bar-row">
+              <div class="mock-bar-label">普通一本</div>
+              <div class="mock-bar-track"><div class="mock-bar-fill blue" style="width:8%"><span>8%</span></div></div>
+            </div>
+          </div>
+
+          <div style="font-size:10px;font-weight:600;color:#6b7280;margin:10px 0 4px;">GPA 分布</div>
+          <div class="mock-bar-chart">
+            <div class="mock-bar-row">
+              <div class="mock-bar-label">3.7+ / 90%+</div>
+              <div class="mock-bar-track"><div class="mock-bar-fill green" style="width:38%"><span>38%</span></div></div>
+            </div>
+            <div class="mock-bar-row">
+              <div class="mock-bar-label">3.5-3.7 / 85%</div>
+              <div class="mock-bar-track"><div class="mock-bar-fill green" style="width:35%"><span>35%</span></div></div>
+            </div>
+            <div class="mock-bar-row">
+              <div class="mock-bar-label">3.3-3.5 / 80%</div>
+              <div class="mock-bar-track"><div class="mock-bar-fill green" style="width:20%"><span>20%</span></div></div>
+            </div>
+            <div class="mock-bar-row">
+              <div class="mock-bar-label">&lt;3.3 / &lt;80%</div>
+              <div class="mock-bar-track"><div class="mock-bar-fill green" style="width:7%"><span>7%</span></div></div>
+            </div>
+          </div>
+
+          <div class="mock-section-title" style="margin-top:12px;">就业统计</div>
+          <div class="mock-salary-box">
+            <div class="s-label">毕业生平均薪资</div>
+            <div class="s-num">£58,000</div>
+          </div>
+          <div style="font-size:10px;font-weight:600;color:#6b7280;margin-bottom:6px;">主要雇主</div>
+          <div class="mock-employer-tags">
+            <span class="mock-employer-tag">Goldman Sachs</span>
+            <span class="mock-employer-tag">J.P. Morgan</span>
+            <span class="mock-employer-tag">McKinsey</span>
+            <span class="mock-employer-tag">Deloitte</span>
+            <span class="mock-employer-tag">Morgan Stanley</span>
+            <span class="mock-employer-tag">HSBC</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Screen: 项目详情页 -->
+    <div class="screen-label">每个项目都有独立详情页</div>
+    <div class="phone-frame">
+      <div class="phone-screen">
+        <div class="phone-status"><span>9:43</span><span>📶 100%</span></div>
+        <div class="phone-body">
+          <div style="background:linear-gradient(135deg,#1e3a5f,#2563eb);border-radius:12px;padding:12px;color:white;margin-bottom:10px;">
+            <div style="font-size:9px;color:rgba(255,255,255,0.6);">🇬🇧 Imperial College London</div>
+            <div style="font-size:15px;font-weight:800;margin:4px 0;">MSc Finance & Accounting</div>
+            <div style="display:flex;gap:4px;font-size:9px;flex-wrap:wrap;">
+              <span style="background:rgba(255,255,255,0.15);padding:2px 8px;border-radius:10px;">Finance & Accounting</span>
+              <span style="background:rgba(255,255,255,0.15);padding:2px 8px;border-radius:10px;">⏱ 12个月</span>
+              <span style="background:rgba(96,211,148,0.3);padding:2px 8px;border-radius:10px;">免GMAT</span>
+              <span style="background:rgba(96,211,148,0.3);padding:2px 8px;border-radius:10px;">接受应届</span>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px;">
+              <div style="background:rgba(255,255,255,0.12);border-radius:8px;padding:6px;text-align:center;"><div style="font-size:14px;font-weight:800;">9.3</div><div style="font-size:8px;color:rgba(255,255,255,0.6);">品牌</div></div>
+              <div style="background:rgba(255,255,255,0.12);border-radius:8px;padding:6px;text-align:center;"><div style="font-size:14px;font-weight:800;">8.1</div><div style="font-size:8px;color:rgba(255,255,255,0.6);">难度</div></div>
+              <div style="background:rgba(255,255,255,0.12);border-radius:8px;padding:6px;text-align:center;"><div style="font-size:14px;font-weight:800;">£38.2k</div><div style="font-size:8px;color:rgba(255,255,255,0.6);">学费</div></div>
+              <div style="background:rgba(255,255,255,0.12);border-radius:8px;padding:6px;text-align:center;"><div style="font-size:14px;font-weight:800;">£58k</div><div style="font-size:8px;color:rgba(255,255,255,0.6);">均薪</div></div>
+            </div>
+          </div>
+
+          <div class="mock-section-title">该项目录取画像</div>
+          <div class="mock-section-sub">基于 89 条中国学生录取数据</div>
+          <div class="mock-bar-chart">
+            <div class="mock-bar-row"><div class="mock-bar-label">985</div><div class="mock-bar-track"><div class="mock-bar-fill blue" style="width:52%"><span>52%</span></div></div></div>
+            <div class="mock-bar-row"><div class="mock-bar-label">211 / 财经</div><div class="mock-bar-track"><div class="mock-bar-fill blue" style="width:30%"><span>30%</span></div></div></div>
+            <div class="mock-bar-row"><div class="mock-bar-label">海外本科</div><div class="mock-bar-track"><div class="mock-bar-fill blue" style="width:12%"><span>12%</span></div></div></div>
+            <div class="mock-bar-row"><div class="mock-bar-label">普通一本</div><div class="mock-bar-track"><div class="mock-bar-fill blue" style="width:6%"><span>6%</span></div></div></div>
+          </div>
+
+          <div style="font-size:10px;font-weight:600;color:#6b7280;margin:10px 0 4px;">GPA 分布</div>
+          <div class="mock-bar-chart">
+            <div class="mock-bar-row"><div class="mock-bar-label">3.7+ / 90%+</div><div class="mock-bar-track"><div class="mock-bar-fill green" style="width:42%"><span>42%</span></div></div></div>
+            <div class="mock-bar-row"><div class="mock-bar-label">3.5-3.7</div><div class="mock-bar-track"><div class="mock-bar-fill green" style="width:33%"><span>33%</span></div></div></div>
+            <div class="mock-bar-row"><div class="mock-bar-label">3.3-3.5</div><div class="mock-bar-track"><div class="mock-bar-fill green" style="width:18%"><span>18%</span></div></div></div>
+            <div class="mock-bar-row"><div class="mock-bar-label">&lt;3.3</div><div class="mock-bar-track"><div class="mock-bar-fill green" style="width:7%"><span>7%</span></div></div></div>
+          </div>
+
+          <div style="margin-top:10px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:10px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+              <div><div style="font-size:9px;color:#16a34a;font-weight:600;">就业率</div><div style="font-size:18px;font-weight:900;color:#16a34a;">95%</div></div>
+              <div><div style="font-size:9px;color:#16a34a;font-weight:600;">平均薪资</div><div style="font-size:18px;font-weight:900;color:#16a34a;">£58,000</div></div>
+              <div><div style="font-size:9px;color:#16a34a;font-weight:600;">投行/咨询</div><div style="font-size:18px;font-weight:900;color:#16a34a;">42%</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Screen 4: 项目对比 -->
+    <div class="screen-label">横向对比多个项目</div>
+    <div class="phone-frame">
+      <div class="phone-screen">
+        <div class="phone-status"><span>9:44</span><span>📶 100%</span></div>
+        <div class="phone-nav">⚖️ 项目对比</div>
+        <div class="phone-body">
+          <div class="mock-compare">
+            <div class="hdr"></div>
+            <div class="hdr" style="font-size:8px;">LSE<br>MSc Finance</div>
+            <div class="hdr" style="font-size:8px;">IC<br>MSc F&A</div>
+            <div class="hdr" style="font-size:8px;">CUHK<br>MSc Finance</div>
+
+            <div class="label-col">品牌分</div>
+            <div class="val highlight">9.5</div>
+            <div class="val">9.3</div>
+            <div class="val">8.0</div>
+
+            <div class="label-col">难度</div>
+            <div class="val">9.2</div>
+            <div class="val">8.1</div>
+            <div class="val">7.5</div>
+
+            <div class="label-col">学费</div>
+            <div class="val">£39,984</div>
+            <div class="val">£38,200</div>
+            <div class="val">HK$330k</div>
+
+            <div class="label-col">学制</div>
+            <div class="val">10个月</div>
+            <div class="val">12个月</div>
+            <div class="val">12个月</div>
+
+            <div class="label-col">均薪</div>
+            <div class="val highlight">£65,000</div>
+            <div class="val">£58,000</div>
+            <div class="val">HK$280k</div>
+
+            <div class="label-col">GMAT</div>
+            <div class="val">需要</div>
+            <div class="val" style="color:#16a34a;font-weight:700;">免GMAT</div>
+            <div class="val">需要</div>
+
+            <div class="label-col">工作经验</div>
+            <div class="val" style="color:#16a34a;font-weight:700;">接受应届</div>
+            <div class="val" style="color:#16a34a;font-weight:700;">接受应届</div>
+            <div class="val" style="color:#16a34a;font-weight:700;">接受应届</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Screen 5: 申请报告 -->
+    <div class="screen-label">一键生成申请规划报告</div>
+    <div class="phone-frame">
+      <div class="phone-screen">
+        <div class="phone-status"><span>9:45</span><span>📶 100%</span></div>
+        <div class="phone-nav">📋 申请规划报告</div>
+        <div class="phone-body">
+          <div style="background:linear-gradient(135deg,#1e3a5f,#2563eb);border-radius:12px;padding:12px;color:white;margin-bottom:10px;">
+            <div style="font-size:12px;font-weight:700;margin-bottom:8px;">综合实力 7.8 / 10</div>
+            <div style="display:flex;gap:8px;">
+              <div style="flex:1;text-align:center;background:rgba(255,255,255,0.12);border-radius:8px;padding:6px;">
+                <div style="font-size:8px;color:rgba(255,255,255,0.6);">本科背景</div>
+                <div style="font-size:14px;font-weight:800;">7.5</div>
+              </div>
+              <div style="flex:1;text-align:center;background:rgba(255,255,255,0.12);border-radius:8px;padding:6px;">
+                <div style="font-size:8px;color:rgba(255,255,255,0.6);">GPA</div>
+                <div style="font-size:14px;font-weight:800;">7.0</div>
+              </div>
+              <div style="flex:1;text-align:center;background:rgba(255,255,255,0.12);border-radius:8px;padding:6px;">
+                <div style="font-size:8px;color:rgba(255,255,255,0.6);">语言</div>
+                <div style="font-size:14px;font-weight:800;">+1.0</div>
+              </div>
+              <div style="flex:1;text-align:center;background:rgba(255,255,255,0.12);border-radius:8px;padding:6px;">
+                <div style="font-size:8px;color:rgba(255,255,255,0.6);">GMAT</div>
+                <div style="font-size:14px;font-weight:800;">+2.0</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="mock-section-title">📈 背景提升建议</div>
+          <div style="font-size:10px;color:#374151;line-height:1.6;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:8px;margin-bottom:8px;">
+            <div style="margin-bottom:4px;"><strong>1. IELTS 7.0 → 7.5</strong></div>
+            <div style="color:#6b7280;font-size:9px;">LSE、IC 等 G5 项目 7.5 更有竞争力，可解锁更多冲刺项目</div>
+          </div>
+          <div style="font-size:10px;color:#374151;line-height:1.6;background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:8px;margin-bottom:8px;">
+            <div style="margin-bottom:4px;"><strong>2. 补充一段买方实习</strong></div>
+            <div style="color:#6b7280;font-size:9px;">投行方向申请者中，有买方（PE/VC）经历的录取率显著更高</div>
+          </div>
+          <div style="font-size:10px;color:#374151;line-height:1.6;background:#fef3c7;border:1px solid #fde68a;border-radius:8px;padding:8px;">
+            <div style="margin-bottom:4px;"><strong>3. GMAT 710 → 730+</strong></div>
+            <div style="color:#6b7280;font-size:9px;">LSE MSc Finance 录取者 GMAT 中位数约 720-740</div>
+          </div>
+
+          <div class="mock-section-title" style="margin-top:12px;">📅 申请时间线</div>
+          <div style="font-size:10px;color:#374151;line-height:1.8;">
+            <div>🟢 <strong>6-8月</strong> 备考语言 + GMAT 冲分</div>
+            <div>🟡 <strong>9-10月</strong> 选校定校 + 文书初稿</div>
+            <div>🔵 <strong>11-12月</strong> 第一批次提交（冲刺校）</div>
+            <div>🟣 <strong>1-2月</strong> 第二批次提交（匹配+保底）</div>
+            <div>🟠 <strong>3-5月</strong> 面试 + 等结果 + 选 Offer</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Screen 6: 相似背景去向 -->
+    <div class="screen-label">和你背景相似的人，都去了哪？</div>
+    <div class="phone-frame">
+      <div class="phone-screen">
+        <div class="phone-status"><span>9:46</span><span>📶 100%</span></div>
+        <div class="phone-body">
+          <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:12px;margin-bottom:10px;">
+            <div style="font-size:12px;font-weight:700;color:#1e3a5f;margin-bottom:4px;">👥 相似背景申请者去向</div>
+            <div style="font-size:9px;color:#9ca3af;margin-bottom:10px;">211 财经 · GPA 3.3-3.7 · IELTS 6.5-7.5 · 共找到 186 位相似申请者</div>
+
+            <div style="font-size:10px;font-weight:600;color:#6b7280;margin-bottom:6px;">他们最终去了这些学校</div>
+            <div class="mock-bar-chart">
+              <div class="mock-bar-row">
+                <div class="mock-bar-label">IC London</div>
+                <div class="mock-bar-track"><div class="mock-bar-fill blue" style="width:28%"><span>28人</span></div></div>
+              </div>
+              <div class="mock-bar-row">
+                <div class="mock-bar-label">Edinburgh</div>
+                <div class="mock-bar-track"><div class="mock-bar-fill blue" style="width:24%"><span>24人</span></div></div>
+              </div>
+              <div class="mock-bar-row">
+                <div class="mock-bar-label">CUHK</div>
+                <div class="mock-bar-track"><div class="mock-bar-fill blue" style="width:22%"><span>22人</span></div></div>
+              </div>
+              <div class="mock-bar-row">
+                <div class="mock-bar-label">Warwick</div>
+                <div class="mock-bar-track"><div class="mock-bar-fill blue" style="width:20%"><span>20人</span></div></div>
+              </div>
+              <div class="mock-bar-row">
+                <div class="mock-bar-label">Manchester</div>
+                <div class="mock-bar-track"><div class="mock-bar-fill blue" style="width:18%"><span>18人</span></div></div>
+              </div>
+              <div class="mock-bar-row">
+                <div class="mock-bar-label">NUS</div>
+                <div class="mock-bar-track"><div class="mock-bar-fill blue" style="width:15%"><span>15人</span></div></div>
+              </div>
+            </div>
+
+            <div style="font-size:10px;font-weight:600;color:#6b7280;margin:12px 0 6px;">他们申请了哪些方向</div>
+            <div class="mock-bar-chart">
+              <div class="mock-bar-row">
+                <div class="mock-bar-label">Finance</div>
+                <div class="mock-bar-track"><div class="mock-bar-fill purple" style="width:35%"><span>35%</span></div></div>
+              </div>
+              <div class="mock-bar-row">
+                <div class="mock-bar-label">BA</div>
+                <div class="mock-bar-track"><div class="mock-bar-fill purple" style="width:25%"><span>25%</span></div></div>
+              </div>
+              <div class="mock-bar-row">
+                <div class="mock-bar-label">Accounting</div>
+                <div class="mock-bar-track"><div class="mock-bar-fill purple" style="width:18%"><span>18%</span></div></div>
+              </div>
+              <div class="mock-bar-row">
+                <div class="mock-bar-label">Management</div>
+                <div class="mock-bar-track"><div class="mock-bar-fill purple" style="width:12%"><span>12%</span></div></div>
+              </div>
+            </div>
+
+            <div style="margin-top:12px;background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:8px;">
+              <div style="font-size:10px;color:#2563eb;font-weight:600;">💡 洞察</div>
+              <div style="font-size:9px;color:#374151;margin-top:2px;line-height:1.5;">和你背景相似的申请者中，72% 拿到了 QS 前100的 offer。IC 和 Edinburgh 是最热门去向，Finance 和 BA 是最主流方向。</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Screen 8: 申请进度管理 -->
+    <div class="screen-label">收藏 + 申请进度管理</div>
+    <div class="phone-frame">
+      <div class="phone-screen">
+        <div class="phone-status"><span>9:48</span><span>📶 100%</span></div>
+        <div class="phone-nav">📊 申请进度</div>
+        <div class="phone-body">
+          <div style="display:flex;gap:4px;margin-bottom:10px;overflow-x:auto;">
+            <div style="background:#2563eb;color:white;font-size:9px;font-weight:600;padding:4px 10px;border-radius:8px;white-space:nowrap;">全部 (6)</div>
+            <div style="background:#f8fafc;border:1px solid #e2e8f0;font-size:9px;padding:4px 10px;border-radius:8px;white-space:nowrap;color:#6b7280;">感兴趣 (2)</div>
+            <div style="background:#f8fafc;border:1px solid #e2e8f0;font-size:9px;padding:4px 10px;border-radius:8px;white-space:nowrap;color:#6b7280;">准备中 (2)</div>
+            <div style="background:#f8fafc;border:1px solid #e2e8f0;font-size:9px;padding:4px 10px;border-radius:8px;white-space:nowrap;color:#6b7280;">已提交 (1)</div>
+            <div style="background:#f8fafc;border:1px solid #e2e8f0;font-size:9px;padding:4px 10px;border-radius:8px;white-space:nowrap;color:#6b7280;">Offer (1)</div>
+          </div>
+
+          <!-- Tracker cards -->
+          <div style="background:white;border:1px solid #e2e8f0;border-radius:10px;padding:10px;margin-bottom:8px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+              <div>
+                <div style="font-size:9px;color:#9ca3af;">🇬🇧 LSE</div>
+                <div style="font-size:11px;font-weight:700;color:#1e3a5f;">MSc Finance</div>
+              </div>
+              <div style="background:#fef3c7;color:#d97706;font-size:9px;font-weight:600;padding:3px 10px;border-radius:8px;">📝 文书中</div>
+            </div>
+            <div style="display:flex;gap:4px;margin-top:6px;">
+              <span class="mock-tag reach">🔥 冲刺</span>
+              <span style="font-size:8px;color:#9ca3af;">DDL: 2025-12-15</span>
+            </div>
+          </div>
+
+          <div style="background:white;border:1px solid #e2e8f0;border-radius:10px;padding:10px;margin-bottom:8px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+              <div>
+                <div style="font-size:9px;color:#9ca3af;">🇬🇧 Imperial College</div>
+                <div style="font-size:11px;font-weight:700;color:#1e3a5f;">MSc Finance & Accounting</div>
+              </div>
+              <div style="background:#dbeafe;color:#2563eb;font-size:9px;font-weight:600;padding:3px 10px;border-radius:8px;">📤 已提交</div>
+            </div>
+            <div style="display:flex;gap:4px;margin-top:6px;">
+              <span class="mock-tag match">✅ 匹配</span>
+              <span style="font-size:8px;color:#9ca3af;">提交于 2025-11-20</span>
+            </div>
+          </div>
+
+          <div style="background:white;border:1px solid #bbf7d0;border-radius:10px;padding:10px;margin-bottom:8px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+              <div>
+                <div style="font-size:9px;color:#9ca3af;">🇬🇧 Warwick</div>
+                <div style="font-size:11px;font-weight:700;color:#1e3a5f;">MSc Finance</div>
+              </div>
+              <div style="background:#d1fae5;color:#16a34a;font-size:9px;font-weight:600;padding:3px 10px;border-radius:8px;">🎉 Offer!</div>
+            </div>
+            <div style="display:flex;gap:4px;margin-top:6px;">
+              <span class="mock-tag safety">🛡️ 保底</span>
+              <span style="font-size:8px;color:#16a34a;font-weight:600;">条件 Offer · 2025-12-05</span>
+            </div>
+          </div>
+
+          <div style="background:white;border:1px solid #e2e8f0;border-radius:10px;padding:10px;margin-bottom:8px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+              <div>
+                <div style="font-size:9px;color:#9ca3af;">🇭🇰 CUHK</div>
+                <div style="font-size:11px;font-weight:700;color:#1e3a5f;">MSc Finance</div>
+              </div>
+              <div style="background:#f3e8ff;color:#7c3aed;font-size:9px;font-weight:600;padding:3px 10px;border-radius:8px;">🎤 面试中</div>
+            </div>
+            <div style="display:flex;gap:4px;margin-top:6px;">
+              <span class="mock-tag match">✅ 匹配</span>
+              <span style="font-size:8px;color:#9ca3af;">面试日期 2025-12-10</span>
+            </div>
+          </div>
+
+          <div style="background:white;border:1px solid #e2e8f0;border-radius:10px;padding:10px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+              <div>
+                <div style="font-size:9px;color:#9ca3af;">🇸🇬 NUS</div>
+                <div style="font-size:11px;font-weight:700;color:#1e3a5f;">MSc Finance</div>
+              </div>
+              <div style="background:#f8fafc;color:#6b7280;font-size:9px;font-weight:600;padding:3px 10px;border-radius:8px;">📌 感兴趣</div>
+            </div>
+            <div style="display:flex;gap:4px;margin-top:6px;">
+              <span class="mock-tag match">✅ 匹配</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ── 使用流程 ── -->
+  <div class="section">
+    <div class="section-title">3 步完成选校</div>
+    <div class="section-sub">从迷茫到清晰，只需要 2 分钟</div>
+    <div class="flow-steps">
+      <div class="flow-step">
+        <div class="flow-num">1</div>
+        <div class="flow-content">
+          <div class="flow-title">填写背景信息</div>
+          <div class="flow-desc">本科院校、GPA、语言成绩、实习经历、目标国家</div>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-num">2</div>
+        <div class="flow-content">
+          <div class="flow-title">AI 生成推荐方案</div>
+          <div class="flow-desc">冲刺 / 匹配 / 保底三档，附带申请策略分析</div>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-num">3</div>
+        <div class="flow-content">
+          <div class="flow-title">收藏 → 对比 → 规划</div>
+          <div class="flow-desc">收藏感兴趣的项目，横向对比，生成申请规划报告</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="highlight-box">
+      <div class="big">79,956</div>
+      <div class="label">条真实录取案例支撑推荐</div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ── 和传统方式对比 ── -->
+  <div class="section">
+    <div class="section-title">vs 传统选校方式</div>
+    <div class="section-sub">为什么不再需要到处翻帖子、问学长</div>
+    <table class="compare-table">
+      <tr>
+        <th>对比维度</th>
+        <th>传统方式</th>
+        <th>本工具</th>
+      </tr>
+      <tr>
+        <td>选校速度</td>
+        <td>1-2 周查资料</td>
+        <td><span class="check">2 分钟</span></td>
+      </tr>
+      <tr>
+        <td>数据量</td>
+        <td>零散帖子</td>
+        <td><span class="check">8 万条案例</span></td>
+      </tr>
+      <tr>
+        <td>冲刺/保底分档</td>
+        <td>靠感觉</td>
+        <td><span class="check">AI 量化匹配</span></td>
+      </tr>
+      <tr>
+        <td>就业数据</td>
+        <td>几乎没有</td>
+        <td><span class="check">1599 条</span></td>
+      </tr>
+      <tr>
+        <td>多国对比</td>
+        <td>极难</td>
+        <td><span class="check">6 国一站式</span></td>
+      </tr>
+      <tr>
+        <td>费用</td>
+        <td>中介 ¥3-5 万</td>
+        <td><span class="check">免费</span></td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ── 适合谁 ── -->
+  <div class="section">
+    <div class="section-title">适合谁？</div>
+    <div class="section-sub">如果你是以下情况，这个工具就是为你做的</div>
+    <div class="who-grid">
+      <div class="who-item">
+        <div class="who-emoji">🎓</div>
+        <div class="who-text">大三/大四，准备申请商科硕士，不知道该选哪些学校</div>
+      </div>
+      <div class="who-item">
+        <div class="who-emoji">🌍</div>
+        <div class="who-text">英港新澳多国混申，需要跨国横向对比</div>
+      </div>
+      <div class="who-item">
+        <div class="who-emoji">📉</div>
+        <div class="who-text">GPA / 语言 / 背景一般，想知道自己能冲哪些项目</div>
+      </div>
+      <div class="who-item">
+        <div class="who-emoji">💡</div>
+        <div class="who-text">想要数据驱动地选校，而不是靠感觉</div>
+      </div>
+      <div class="who-item">
+        <div class="who-emoji">💰</div>
+        <div class="who-text">不想花几万块找中介做选校，想自己高效搞定</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── CTA ── -->
+  <div class="cta">
+    <h3>现在就试试</h3>
+    <p>免费使用 · 无需注册 · 2 分钟出结果</p>
+    <a href="http://localhost:3200" class="cta-btn">立即开始选校 →</a>
+    <div class="cta-note">输入邀请码即可解锁全部功能</div>
+  </div>
+
+</div>
+</body>
+</html>
